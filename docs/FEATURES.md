@@ -301,8 +301,13 @@ Settings stored in `UserDefaults`; export/import as JSON (P2).
 ## 19. Open questions
 
 - Final name (Kaliber is a placeholder; check for conflicts on GitHub / App Store).
-- Minimum macOS version: 13 or 14?
-- SwiftUI `Canvas` vs. pure AppKit/Core Animation for the overlay (precision of 1-px lines on
-  Retina favours Core Graphics in device space).
-- Should measurement mode freeze the screen by default (PixelSnap: yes) or stay live?
-- Default behaviour for "inside" vs "outside" edges.
+
+### Decided for the prototype (2026-11-09, revisit if needed)
+
+- **Minimum macOS 14**: `SCScreenshotManager` and `SCContentFilter.pointPixelScale` need it.
+- **Overlay in AppKit + Core Graphics**, not SwiftUI `Canvas`: snapshot shown via a layer,
+  measurements drawn in a flipped view at device-pixel coordinates (verified 1-px exact).
+- **Screen freezes by default** (like PixelSnap); live mode / re-capture (3.6) later.
+- **Inside edges by default**, ⌥ held switches to outside.
+- **Default tolerance 2 %** (≈5/255 per channel). 10 % missed light card borders and
+  light-grey buttons on a synthetic UI.

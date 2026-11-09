@@ -8,17 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		0A4156A13D47BE7FF3755C6A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3F6802F684CCD22F181C4C /* AppDelegate.swift */; };
+		0A849802154761D51CCE6965 /* GlobalHotKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74CA00B7FD90472219DE837A /* GlobalHotKey.swift */; };
 		0DD832D14C231F23BB7AA639 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A96FBA4893CB5030DCB58E7 /* main.swift */; };
 		32A2C8EC6EEF1766C68560B7 /* KaliberCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6354B1557E6A3AF4B347B3B0 /* KaliberCore */; };
+		379D6CD2D05F5D7F2EEFA024 /* MeasureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067D029E7E91DCEB0B931C94 /* MeasureView.swift */; };
 		3B38BFA02F9315A12F978E41 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301BE796CE3646654FA8AC11 /* StatusBarController.swift */; };
+		40D4AEA5ACC7E81620FC5F85 /* MeasureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9451A195589B6927F84602 /* MeasureController.swift */; };
+		4B50D116A594A52CDC1DC0A0 /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FED75AC942E03072DBE50C /* OverlayWindow.swift */; };
+		77016086FEF6E4D708B367F2 /* MeasureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEDB317E3C933362D87E164 /* MeasureSession.swift */; };
+		9D0F8F6AC2B5592F73146E5C /* ScreenCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B6D6F410602855A3B1412C /* ScreenCapture.swift */; };
+		DF396061D38BEA783D6D89E3 /* DebugRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E3E6083A368495928AE294 /* DebugRenderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		067D029E7E91DCEB0B931C94 /* MeasureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureView.swift; sourceTree = "<group>"; };
 		0A96FBA4893CB5030DCB58E7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		16B6D6F410602855A3B1412C /* ScreenCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCapture.swift; sourceTree = "<group>"; };
 		301BE796CE3646654FA8AC11 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
+		3EEDB317E3C933362D87E164 /* MeasureSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureSession.swift; sourceTree = "<group>"; };
+		46E3E6083A368495928AE294 /* DebugRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugRenderer.swift; sourceTree = "<group>"; };
 		4FDFF36F3D5D50AD879A8F0C /* Kaliber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kaliber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B3F6802F684CCD22F181C4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67716637FC41B48FA369745B /* KaliberCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = KaliberCore; path = Packages/KaliberCore; sourceTree = SOURCE_ROOT; };
+		74CA00B7FD90472219DE837A /* GlobalHotKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotKey.swift; sourceTree = "<group>"; };
+		A1FED75AC942E03072DBE50C /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
+		EA9451A195589B6927F84602 /* MeasureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +51,14 @@
 			isa = PBXGroup;
 			children = (
 				5B3F6802F684CCD22F181C4C /* AppDelegate.swift */,
+				46E3E6083A368495928AE294 /* DebugRenderer.swift */,
+				74CA00B7FD90472219DE837A /* GlobalHotKey.swift */,
 				0A96FBA4893CB5030DCB58E7 /* main.swift */,
+				EA9451A195589B6927F84602 /* MeasureController.swift */,
+				3EEDB317E3C933362D87E164 /* MeasureSession.swift */,
+				067D029E7E91DCEB0B931C94 /* MeasureView.swift */,
+				A1FED75AC942E03072DBE50C /* OverlayWindow.swift */,
+				16B6D6F410602855A3B1412C /* ScreenCapture.swift */,
 				301BE796CE3646654FA8AC11 /* StatusBarController.swift */,
 			);
 			path = Kaliber;
@@ -141,6 +162,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A4156A13D47BE7FF3755C6A /* AppDelegate.swift in Sources */,
+				DF396061D38BEA783D6D89E3 /* DebugRenderer.swift in Sources */,
+				0A849802154761D51CCE6965 /* GlobalHotKey.swift in Sources */,
+				40D4AEA5ACC7E81620FC5F85 /* MeasureController.swift in Sources */,
+				77016086FEF6E4D708B367F2 /* MeasureSession.swift in Sources */,
+				379D6CD2D05F5D7F2EEFA024 /* MeasureView.swift in Sources */,
+				4B50D116A594A52CDC1DC0A0 /* OverlayWindow.swift in Sources */,
+				9D0F8F6AC2B5592F73146E5C /* ScreenCapture.swift in Sources */,
 				3B38BFA02F9315A12F978E41 /* StatusBarController.swift in Sources */,
 				0DD832D14C231F23BB7AA639 /* main.swift in Sources */,
 			);

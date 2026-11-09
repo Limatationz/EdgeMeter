@@ -3,7 +3,8 @@
 Open-source screen measurement tool for macOS. Measure distances, sizes and spacing of anything
 on screen, pixel-exact, with smart edge snapping – an open alternative to PixelSnap.
 
-> Working title. Status: detection core done and tested, overlay UI not started.
+> Working title. Status: first usable prototype – global shortcut, frozen overlay per display,
+> hover / two-point / object / area measuring, undo, copy. No settings window or export yet.
 
 - [Feature catalog](docs/FEATURES.md)
 
@@ -14,7 +15,14 @@ Stack: Swift 6, AppKit, ScreenCaptureKit, macOS 14+. License: MIT.
 ```
 Kaliber.xcodeproj          generated from project.yml (XcodeGen) – open this in Xcode
 project.yml                source of truth for the Xcode project
-App/Kaliber/               menu-bar app skeleton (AppKit); measuring mode not wired up yet
+App/Kaliber/               menu-bar app (AppKit)
+  GlobalHotKey.swift         ⌃⌥⌘M via Carbon RegisterEventHotKey
+  ScreenCapture.swift        permission + per-display ScreenCaptureKit snapshots
+  MeasureController.swift    starts/stops sessions, permission and error alerts
+  MeasureSession.swift       shared mode/scale/tolerance, keyboard commands
+  OverlayWindow.swift        borderless window per display showing the frozen snapshot
+  MeasureView.swift          input for all modes, device-pixel drawing, HUD
+  DebugRenderer.swift        DEBUG only: renders the overlay over a synthetic UI to PNG
 Packages/KaliberCore/      pure-Swift measurement core, no AppKit dependency
   Sources/KaliberCore/
     PixelBuffer.swift        frozen BGRA/RGBA framebuffer copy (+ CGImage bridge)
@@ -22,7 +30,9 @@ Packages/KaliberCore/      pure-Swift measurement core, no AppKit dependency
     EdgeDetector.swift       ray scan, hover snap, nearest-boundary snapping
     ObjectDetector.swift     scanline flood fill → bounding box (object mode)
     AreaSnapper.swift        snaps a dragged rect's four sides to edges
-  Tests/KaliberCoreTests/  40 tests against synthetic images (boxes, glyphs, gradients, AA fringes)
+    ScreenMeasurement.swift  pinned measurement model + clipboard text
+    Units.swift              scale modes (Auto/1×/2×/3×) and length formatting
+  Tests/KaliberCoreTests/  47 tests against synthetic images (boxes, glyphs, gradients, AA fringes)
 docs/FEATURES.md           feature catalog and roadmap
 ```
 
@@ -38,6 +48,31 @@ open Kaliber.xcodeproj
 
 # Regenerate the project after editing project.yml
 brew install xcodegen && xcodegen generate
+```
+
+## Using it
+
+Press **⌃⌥⌘M** (or the ruler icon › Measure). The screen freezes; Esc leaves.
+On first use macOS asks for Screen Recording permission – grant it, then restart Kaliber.
+
+| Key | Action |
+|---|---|
+| 1 / 2 / 3 / 4 | Hover / Two-point / Object / Area mode |
+| Click | Pin hover measurement, or measure the clicked object (mode 3) |
+| Drag | Two-point line (axis-locked) or area (modes 2, 4) |
+| ⌥ (hold) | Outside edges instead of inside (hover) |
+| ⌘ (hold) | Disable snapping while dragging |
+| [ ] or ⌥-scroll | Edge tolerance −/+ |
+| S | Cycle scale: Auto, 1×, 2×, 3× |
+| ⌘C / ⇧⌘C | Copy current / all measurements |
+| ⌘Z / ⇧⌘Z, ⌫ | Undo / redo, delete last |
+| X | Clear all |
+| H | Toggle HUD |
+
+Overlay drawing can be checked without a live session or permission:
+
+```sh
+Kaliber.app/Contents/MacOS/Kaliber -renderDemo /tmp/kaliber-demo.png   # Debug builds only
 ```
 
 ## Core concepts (see also FEATURES.md §2, §17)

@@ -1,8 +1,8 @@
 import AppKit
 import KaliberCore
 
-/// Owns the menu-bar item (FEATURES.md 3.1). Measuring mode itself is not wired up yet;
-/// the menu is the skeleton the overlay, shortcut and settings will hang off.
+/// Owns the menu-bar item (FEATURES.md 3.1). The ⌃⌥⌘M shown in the menu is only a hint;
+/// the actual global shortcut is registered in `AppDelegate`.
 @MainActor
 final class StatusBarController: NSObject {
     func makeStatusItem() -> NSStatusItem {
@@ -46,12 +46,7 @@ final class StatusBarController: NSObject {
     }
 
     @objc private func startMeasuring() {
-        // TODO: capture snapshot per display (ScreenCaptureKit), show overlay windows,
-        // run EdgeDetector.snap on hover. See docs/FEATURES.md §3, §4, §17.
-        let alert = NSAlert()
-        alert.messageText = "Measuring mode is not implemented yet"
-        alert.informativeText = "The detection core (KaliberCore) is in place and tested; the overlay UI comes next."
-        alert.runModal()
+        MeasureController.shared.toggle()
     }
 
     @objc private func openSettings() {
