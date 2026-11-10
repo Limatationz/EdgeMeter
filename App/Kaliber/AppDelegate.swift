@@ -12,6 +12,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         #if DEBUG
         if DebugRenderer.runIfRequested() || DebugRenderer.runSessionIfRequested() { return }
         #endif
+        if LiveBenchmark.runIfRequested() { return }
 
         statusItem = statusBarController.makeStatusItem()
         // ⌃⌥⌘M (FEATURES.md 3.2). Configurable shortcuts come with the settings window.

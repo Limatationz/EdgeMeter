@@ -313,6 +313,15 @@ Settings stored in `UserDefaults`; export/import as JSON (P2).
   through. Offline cost at 3024×1964 on M1 Pro (release): frame copy 0.7 ms, hover snap
   0.01 ms, freezing a live frame 1.1 ms. ScreenCaptureKit's own cost is shown live in the HUD.
   L in live mode freezes the newest frame without a new capture.
+  Measured live (2026-11-10, M1 Pro, 3024×1964, `-liveBenchmark 5`, Release):
+
+  | Screen | fps | copy avg / p95 | snap avg | Kaliber CPU | RSS |
+  |---|---|---|---|---|---|
+  | mostly static (terminal spinner) | 16 | 2.2 / 3.7 ms | 0.04 ms | 4.5 % | 126 MB |
+  | 60 Hz animation | 29 (cap 30) | 2.5 / 4.0 ms | 0.05 ms | 8.8 % | 126 MB |
+
+  System side: WindowServer +0.8 points, replayd +0.6 points. Stream start ~170 ms,
+  first frame ~180 ms after start. Debug builds: same fps, snap ~1.5 ms (unoptimised core).
 - **Inside edges by default**, ⌥ held switches to outside.
 - **Default tolerance 5 %** (≈13/255 per channel), confirmed in the first hands-on test on real
   UIs. 10 % missed light card borders and light-grey buttons; 2 % was too strict. The last used
