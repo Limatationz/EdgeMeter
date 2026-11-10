@@ -43,11 +43,16 @@ final class MeasureSession {
     /// Snap radius for two-point and area mode, in points (converted per display).
     let snapRadiusPoints: Double = 6
 
-    /// Live mode (transparent overlay, continuous capture) vs. frozen snapshot.
+    /// Live mode (transparent overlay, continuous capture, default) vs. frozen snapshot.
     /// Toggled with L and remembered across sessions.
     private(set) var isLive: Bool
 
-    static var storedLiveMode: Bool { UserDefaults.standard.bool(forKey: liveModeKey) }
+    /// Live is the default: measured at under 10 % of one core even with constant animation
+    /// (FEATURES.md §19), and it keeps ⌘-Tab and moving content usable. Frozen stays one
+    /// key away (L), and the last choice wins.
+    static var storedLiveMode: Bool {
+        UserDefaults.standard.object(forKey: liveModeKey) as? Bool ?? true
+    }
     private static let liveModeKey = "liveMode"
 
     private let screens: [NSScreen]

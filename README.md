@@ -53,13 +53,13 @@ brew install xcodegen && xcodegen generate
 
 ## Using it
 
-Press **⌃⌥⌘M** (or the ruler icon › Measure). The screen freezes; Esc leaves.
+Press **⌃⌥⌘M** (or the ruler icon › Measure). Measuring starts live on the real screen; L freezes it. Esc leaves.
 On first use macOS asks for Screen Recording permission – grant it, then restart Kaliber.
 
 | Key | Action |
 |---|---|
 | 1 / 2 / 3 / 4 | Hover / Two-point / Object / Area mode |
-| L | Toggle live / frozen (remembered). Live: screen stays real, ⌘-Tab works, HUD shows fps |
+| L | Toggle live (default) / frozen, remembered. Live: screen stays real, ⌘-Tab works, HUD shows fps |
 | Click | Pin hover measurement, or measure the clicked object (mode 3) |
 | Drag | Two-point line (axis-locked) or area (modes 2, 4) |
 | ⌥ (hold) | Outside edges instead of inside (hover) |

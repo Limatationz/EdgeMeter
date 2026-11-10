@@ -50,7 +50,7 @@
 | 3.1 | Menu-bar app (no Dock icon by default) | P0 | ✓ | Toggle Dock icon in settings. |
 | 3.2 | Global shortcut starts/stops measuring (default ⌃⌥⌘M, customizable) | P0 | ✓ | Record shortcut in settings. |
 | 3.3 | Measuring mode = full-screen transparent overlay window per display, above everything | P0 | ✓ | Level above menu bar; captures all mouse/keyboard events. |
-| 3.4 | Screen is **frozen** on entry (capture snapshot) | P0 | ✓ | Avoids measuring moving content; option to "live" re-capture (3.6). |
+| 3.4 | Live by default; **freeze** the screen with L (snapshot) | P0 | ✓ | Frozen avoids measuring moving content; live keeps ⌘-Tab and animations usable. |
 | 3.5 | Esc / shortcut again leaves mode and clears measurements | P0 | ✓ | Option: keep measurements for next session (6.7). |
 | 3.6 | Re-capture current screen without leaving mode (R) | P1 | – | Useful when underlying UI changed. |
 | 3.7 | Mode switching while measuring: Hover-snap (default) / Two-point / Object / Area | P0 | ✓ | Keys 1–4 or tab cycling, shown in HUD. |
@@ -307,7 +307,8 @@ Settings stored in `UserDefaults`; export/import as JSON (P2).
 - **Minimum macOS 14**: `SCScreenshotManager` and `SCContentFilter.pointPixelScale` need it.
 - **Overlay in AppKit + Core Graphics**, not SwiftUI `Canvas`: snapshot shown via a layer,
   measurements drawn in a flipped view at device-pixel coordinates (verified 1-px exact).
-- **Screen freezes by default** (like PixelSnap). **Live mode** is an option (L, remembered):
+- **Live mode is the default** (changed 2026-11-10 after measuring; PixelSnap freezes). Frozen is
+  one key away (L), and the last choice is remembered. Live mode:
   transparent overlay at status-bar level, one `SCStream` per display capped at 30 fps that only
   delivers frames on change; detection runs on the newest frame. Lets ⌘-Tab and animations
   through. Offline cost at 3024×1964 on M1 Pro (release): frame copy 0.7 ms, hover snap
