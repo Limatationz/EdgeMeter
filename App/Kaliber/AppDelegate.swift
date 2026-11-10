@@ -10,7 +10,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         #if DEBUG
-        if DebugRenderer.runIfRequested() { return }
+        if DebugRenderer.runIfRequested() || DebugRenderer.runSessionIfRequested() { return }
         #endif
 
         statusItem = statusBarController.makeStatusItem()

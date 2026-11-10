@@ -8,6 +8,31 @@ import KaliberCore
 ///     Kaliber.app/Contents/MacOS/Kaliber -renderDemo /tmp/kaliber-demo.png
 @MainActor
 enum DebugRenderer {
+    /// `-demoSession <seconds>`: opens a real overlay session (synthetic image instead of a
+    /// capture, so no permission is needed), logs where keyboard input goes, then exits.
+    static func runSessionIfRequested() -> Bool {
+        let seconds = UserDefaults.standard.double(forKey: "demoSession")
+        guard seconds > 0 else { return false }
+        let image = syntheticUI()
+        guard let buffer = PixelBuffer(cgImage: image) else { return false }
+        let snapshots = NSScreen.screens.map {
+            DisplaySnapshot(screen: $0, image: image, buffer: buffer, displayScale: 2)
+        }
+        let session = MeasureSession(snapshots: snapshots) { exit(0) }
+        Task { @MainActor in
+            // Reproduce the hot-key situation: another app is frontmost when measuring starts.
+            NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.finder").first?.activate()
+            try? await Task.sleep(for: .milliseconds(700))
+            print("Kaliber demo session: before begin appActive=\(NSApp.isActive)")
+            session.begin()
+            try? await Task.sleep(for: .milliseconds(300))
+            print("Kaliber demo session: \(session.keyboardState)")
+            try? await Task.sleep(for: .seconds(seconds))
+            session.end()
+        }
+        return true
+    }
+
     static func runIfRequested() -> Bool {
         guard let path = UserDefaults.standard.string(forKey: "renderDemo") else { return false }
         do {

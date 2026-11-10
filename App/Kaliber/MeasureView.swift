@@ -134,6 +134,7 @@ final class MeasureView: NSView {
     }
 
     override func mouseMoved(with event: NSEvent) {
+        NSCursor.crosshair.set()
         setHover(convert(event.locationInWindow, from: nil))
     }
 

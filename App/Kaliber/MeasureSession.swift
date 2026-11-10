@@ -43,8 +43,10 @@ final class MeasureSession {
     func begin() {
         windows = snapshots.map { OverlayWindow(snapshot: $0, session: self) }
         for window in windows { window.orderFrontRegardless() }
-        NSApp.activate()
-        (windowUnderMouse ?? windows.first)?.makeKeyAndOrderFront(nil)
+        if let key = windowUnderMouse ?? windows.first {
+            key.makeKeyAndOrderFront(nil)
+            key.makeFirstResponder(key.measureView)
+        }
         NSCursor.crosshair.set()
         refreshAll()
     }
@@ -70,6 +72,13 @@ final class MeasureSession {
     var activeView: MeasureView? { (windowUnderMouse ?? windows.first)?.measureView }
 
     func isActive(_ view: MeasureView) -> Bool { activeView === view }
+
+    /// Diagnostics for the debug session check: is keyboard input routed to an overlay?
+    var keyboardState: String {
+        let key = windows.first { $0.isKeyWindow }
+        let responderOK = key.map { $0.firstResponder === $0.measureView } ?? false
+        return "overlays=\(windows.count) keyOverlay=\(key != nil) firstResponderIsMeasureView=\(responderOK) appActive=\(NSApp.isActive)"
+    }
 
     /// Recompute hover results (after tolerance/mode changes) and redraw.
     func refreshAll() {
