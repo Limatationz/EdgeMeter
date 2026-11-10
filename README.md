@@ -65,6 +65,7 @@ On first use macOS asks for Screen Recording permission – grant it, then resta
 | ⌥ (hold) | Outside edges instead of inside (hover) |
 | ⌘ (hold) | Disable snapping while dragging |
 | [ ] or ⌥-scroll | Edge tolerance −/+ |
+| Scroll | Live: scrolls the app underneath. Frozen: ignored |
 | S | Cycle scale: Auto, 1×, 2×, 3× |
 | ⌘C / ⇧⌘C | Copy current / all measurements |
 | ⌘Z / ⇧⌘Z, ⌫ | Undo / redo, delete last |

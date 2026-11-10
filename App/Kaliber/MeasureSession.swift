@@ -96,6 +96,7 @@ final class MeasureSession {
     func end() {
         guard !ended else { return }
         ended = true
+        endScrollPassThrough()
         liveCapture?.stop()
         liveCapture = nil
         for window in windows {
@@ -149,6 +150,7 @@ final class MeasureSession {
 
     /// Freezes the newest live frame of every display – no new capture needed.
     private func freeze() {
+        endScrollPassThrough()
         liveCapture?.stop()
         liveCapture = nil
         isLive = false
@@ -188,6 +190,59 @@ final class MeasureSession {
         guard !ended else { return }
         NSLog("Kaliber: live capture failed: \(error)")
         activeView?.flash("Live capture failed: \(error.localizedDescription)")
+    }
+
+    // MARK: Scroll pass-through (live mode)
+    //
+    // An overlay window can't hand a single event to the window below it, and re-posting
+    // events would need Accessibility permission. Instead the overlays briefly stop taking
+    // mouse events, so the rest of the scroll gesture lands in the app underneath. A global
+    // scroll monitor (no permission needed for mouse events) notices when scrolling stops,
+    // then the overlays take the mouse back. The first scroll event of a gesture is lost,
+    // which is one tick and not noticeable on a trackpad.
+
+    private var scrollMonitor: Any?
+    private var restoreTask: Task<Void, Never>?
+    private(set) var isPassingScrollThrough = false
+    /// Quiet time after the last scroll event (incl. trackpad momentum) before the overlay
+    /// takes the mouse back.
+    private let scrollIdle: Duration = .milliseconds(300)
+
+    func passScrollThrough() {
+        // Frozen: the app underneath is hidden behind the snapshot, so scrolling it would
+        // only make the measurements stale without any visible effect.
+        guard isLive, !ended else { return }
+        if !isPassingScrollThrough {
+            isPassingScrollThrough = true
+            for window in windows { window.ignoresMouseEvents = true }
+            scrollMonitor = NSEvent.addGlobalMonitorForEvents(matching: .scrollWheel) { [weak self] event in
+                let option = event.modifierFlags.contains(.option)
+                MainActor.assumeIsolated {
+                    if option { self?.endScrollPassThrough() } else { self?.scheduleScrollRestore() }
+                }
+            }
+        }
+        scheduleScrollRestore()
+    }
+
+    func endScrollPassThrough() {
+        restoreTask?.cancel()
+        restoreTask = nil
+        if let scrollMonitor { NSEvent.removeMonitor(scrollMonitor) }
+        scrollMonitor = nil
+        guard isPassingScrollThrough else { return }
+        isPassingScrollThrough = false
+        for window in windows { window.ignoresMouseEvents = false }
+        activeView?.syncHoverToMouse()
+    }
+
+    private func scheduleScrollRestore() {
+        restoreTask?.cancel()
+        restoreTask = Task { [weak self, scrollIdle] in
+            try? await Task.sleep(for: scrollIdle)
+            guard !Task.isCancelled else { return }
+            self?.endScrollPassThrough()
+        }
     }
 
     // MARK: Keyboard

@@ -207,11 +207,17 @@ final class MeasureView: NSView {
     }
 
     override func flagsChanged(with event: NSEvent) {
+        // ⌥ means "scroll adjusts tolerance": take scroll events back right away.
+        if event.modifierFlags.contains(.option) { session?.endScrollPassThrough() }
         needsDisplay = true
     }
 
     override func scrollWheel(with event: NSEvent) {
-        guard event.modifierFlags.contains(.option) else { return }
+        guard event.modifierFlags.contains(.option) else {
+            // Plain scrolling belongs to the app underneath (live mode only).
+            session?.passScrollThrough()
+            return
+        }
         let delta = event.hasPreciseScrollingDeltas ? event.scrollingDeltaY * 0.002 : event.scrollingDeltaY * 0.01
         session?.adjustTolerance(by: delta)
     }
@@ -255,6 +261,14 @@ final class MeasureView: NSView {
         case .hover, .object:
             return nil
         }
+    }
+
+    /// Re-reads the cursor position, e.g. after mouse events were passed through for a while.
+    func syncHoverToMouse() {
+        guard let window else { return }
+        let inWindow = window.convertPoint(fromScreen: NSEvent.mouseLocation)
+        let point = convert(inWindow, from: nil)
+        setHover(bounds.contains(point) ? point : nil)
     }
 
     // MARK: Pinned measurements
