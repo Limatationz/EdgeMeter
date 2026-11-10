@@ -36,7 +36,7 @@ public enum ScreenMeasurement: Hashable, Sendable {
         self = .cross(origin: snap.origin, horizontal: spans.horizontal, vertical: spans.vertical)
     }
 
-    /// Text for the clipboard and labels, e.g. `120 × 28` or `64`.
+    /// Text for the clipboard: scaled numbers only, e.g. `120 × 28` or `64`.
     public func text(format: LengthFormat, scale: Double) -> String {
         switch self {
         case let .cross(_, h, v):
@@ -45,6 +45,19 @@ public enum ScreenMeasurement: Hashable, Sendable {
             format.string(pixels: l.length, scale: scale)
         case let .box(r):
             "\(format.string(pixels: r.width, scale: scale)) × \(format.string(pixels: r.height, scale: scale))"
+        }
+    }
+
+    /// Text for on-screen labels with units, e.g. `16 pt · 32 px` (see `LengthFormat.label`).
+    /// Crosses get one label per axis, so this returns the combined size for them.
+    public func label(format: LengthFormat, scale: Double) -> String {
+        switch self {
+        case let .cross(_, h, v):
+            format.label(width: h.length, height: v.length, scale: scale)
+        case let .line(l):
+            format.label(pixels: l.length, scale: scale)
+        case let .box(r):
+            format.label(width: r.width, height: r.height, scale: scale)
         }
     }
 }

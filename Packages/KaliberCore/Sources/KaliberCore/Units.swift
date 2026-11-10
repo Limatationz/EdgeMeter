@@ -50,6 +50,25 @@ public struct LengthFormat: Hashable, Sendable {
         Self.trimmed(value(pixels: pixels, scale: scale), maxDecimals: maxDecimals)
     }
 
+    /// On-screen label with units. When the scale divides the pixels (Retina, or a fixed
+    /// 2×/3×) both values are shown, `100 pt · 200 px`; at 1× only `200 px`.
+    public func label(pixels: Int, scale: Double) -> String {
+        Self.showsPoints(scale)
+            ? "\(string(pixels: pixels, scale: scale)) pt · \(pixels) px"
+            : "\(pixels) px"
+    }
+
+    /// Size label, e.g. `100 × 40 pt · 200 × 80 px` or `200 × 80 px`.
+    public func label(width: Int, height: Int, scale: Double) -> String {
+        let px = "\(width) × \(height) px"
+        guard Self.showsPoints(scale) else { return px }
+        return "\(string(pixels: width, scale: scale)) × \(string(pixels: height, scale: scale)) pt · \(px)"
+    }
+
+    static func showsPoints(_ scale: Double) -> Bool {
+        scale > 0 && abs(scale - 1) > 1e-9
+    }
+
     static func trimmed(_ value: Double, maxDecimals: Int) -> String {
         let m = pow(10, Double(maxDecimals))
         let rounded = (value * m).rounded() / m

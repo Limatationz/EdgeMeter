@@ -71,4 +71,28 @@ struct MeasurementTests {
         let l = LineMeasurement(axis: .vertical, line: 3, from: 9, to: 2)
         #expect((l.lower, l.upper, l.length) == (2, 9, 7))
     }
+
+    @Test("labels show pt and px when scaled, px only at 1×")
+    func labels() {
+        let f = LengthFormat()
+        #expect(f.label(pixels: 200, scale: 2) == "100 pt · 200 px")
+        #expect(f.label(pixels: 15, scale: 2) == "7.5 pt · 15 px")
+        #expect(f.label(pixels: 200, scale: 3) == "66.7 pt · 200 px")
+        #expect(f.label(pixels: 200, scale: 1) == "200 px")
+        #expect(f.label(pixels: 200, scale: 0) == "200 px")
+        #expect(f.label(width: 200, height: 80, scale: 2) == "100 × 40 pt · 200 × 80 px")
+        #expect(f.label(width: 200, height: 80, scale: 1) == "200 × 80 px")
+    }
+
+    @Test("measurement labels carry units, clipboard text stays numeric")
+    func measurementLabels() {
+        let f = LengthFormat()
+        let line = ScreenMeasurement.line(LineMeasurement(axis: .horizontal, line: 0, from: 0, to: 32))
+        #expect(line.label(format: f, scale: 2) == "16 pt · 32 px")
+        #expect(line.text(format: f, scale: 2) == "16")
+        let box = ScreenMeasurement.box(PixelRect(x: 0, y: 0, width: 280, height: 80))
+        #expect(box.label(format: f, scale: 2) == "140 × 40 pt · 280 × 80 px")
+        #expect(box.label(format: f, scale: 1) == "280 × 80 px")
+        #expect(box.text(format: f, scale: 2) == "140 × 40")
+    }
 }

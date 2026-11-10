@@ -307,7 +307,7 @@ final class MeasureView: NSView {
 
     private func draw(_ m: ScreenMeasurement, style: Style) {
         let color = style == .live ? accent : accent.withAlphaComponent(0.85)
-        let label = text(m)
+        let label = m.label(format: session?.lengthFormat ?? LengthFormat(), scale: displayScaleFactor)
         switch m {
         case let .cross(origin, h, vs):
             let y = c(origin.y), x = c(origin.x)
@@ -322,8 +322,8 @@ final class MeasureView: NSView {
                 tick(at: CGPoint(x: x, y: c(vs.end)), vertical: false, color: color)
             }
             let fmt = session?.lengthFormat ?? LengthFormat()
-            let w = fmt.string(pixels: h.length, scale: displayScaleFactor)
-            let hgt = fmt.string(pixels: vs.length, scale: displayScaleFactor)
+            let w = fmt.label(pixels: h.length, scale: displayScaleFactor)
+            let hgt = fmt.label(pixels: vs.length, scale: displayScaleFactor)
             drawLabel(w, at: CGPoint(x: (v(h.start) + v(h.end + 1)) / 2, y: y - 14), color: color)
             drawLabel(hgt, at: CGPoint(x: x + 8, y: (v(vs.start) + v(vs.end + 1)) / 2), color: color, anchorLeft: true)
 
