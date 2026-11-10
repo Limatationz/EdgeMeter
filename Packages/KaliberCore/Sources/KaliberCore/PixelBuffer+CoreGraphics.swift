@@ -1,5 +1,6 @@
 #if canImport(CoreGraphics)
 import CoreGraphics
+import Foundation
 
 extension PixelBuffer {
     /// Copies a `CGImage` into a BGRA8 buffer by drawing it into a bitmap context.
@@ -30,6 +31,22 @@ extension PixelBuffer {
         }
         guard ok else { return nil }
         self.init(width: width, height: height, bytesPerRow: bytesPerRow, format: .bgra8, data: data)
+    }
+
+    /// Wraps the pixels in a `CGImage`, e.g. to freeze the latest live frame.
+    /// - Parameter colorSpace: the space the pixels are in (a live stream delivers the
+    ///   display's own space; `init(cgImage:)` produces sRGB).
+    public func makeCGImage(colorSpace: CGColorSpace = CGColorSpace(name: CGColorSpace.sRGB)!) -> CGImage? {
+        let info: UInt32 = switch format {
+        case .bgra8: CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
+        case .rgba8: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue
+        }
+        guard let provider = CGDataProvider(data: Data(data) as CFData) else { return nil }
+        return CGImage(
+            width: width, height: height, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: bytesPerRow,
+            space: colorSpace, bitmapInfo: CGBitmapInfo(rawValue: info), provider: provider,
+            decode: nil, shouldInterpolate: false, intent: .defaultIntent
+        )
     }
 }
 #endif

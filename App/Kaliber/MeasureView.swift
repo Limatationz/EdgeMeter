@@ -1,11 +1,18 @@
 import AppKit
 import KaliberCore
 
-/// Transparent layer above the snapshot: handles input for all four modes and draws
-/// measurements in device-pixel space, so 1-px lines land exactly on pixels.
+/// Transparent layer above the snapshot (frozen) or the live screen: handles input for all
+/// four modes and draws measurements in device-pixel space, so 1-px lines land exactly on pixels.
 final class MeasureView: NSView {
     private weak var session: MeasureSession?
-    let snapshot: DisplaySnapshot
+    /// Backing scale of the display (device pixels per point).
+    let displayScale: Double
+    /// Pixels the detectors read: the snapshot, or the newest live frame. `nil` until the
+    /// first live frame arrives.
+    private(set) var buffer: PixelBuffer?
+    var isLive = false { didSet { liveFrameTimes.removeAll(); lastCopyMilliseconds = nil; needsDisplay = true } }
+    private var liveFrameTimes: [TimeInterval] = []
+    private var lastCopyMilliseconds: Double?
 
     private(set) var pinned: [ScreenMeasurement] = []
     private var redoStack: [ScreenMeasurement] = []
@@ -20,10 +27,28 @@ final class MeasureView: NSView {
     /// Forces the HUD on regardless of mouse position (used by the debug renderer).
     var forceActive = false
 
-    init(snapshot: DisplaySnapshot, session: MeasureSession) {
-        self.snapshot = snapshot
+    init(screen: NSScreen, session: MeasureSession) {
+        displayScale = Double(screen.backingScaleFactor)
         self.session = session
         super.init(frame: .zero)
+    }
+
+    /// New pixels (snapshot or live frame): re-run hover detection on them.
+    func setBuffer(_ buffer: PixelBuffer, copyMilliseconds: Double? = nil) {
+        self.buffer = buffer
+        if isLive {
+            let now = ProcessInfo.processInfo.systemUptime
+            liveFrameTimes.append(now)
+            liveFrameTimes.removeAll { now - $0 > 1 }
+            lastCopyMilliseconds = copyMilliseconds
+        }
+        refreshHover()
+    }
+
+    /// Frames received during the last second.
+    private var liveFPS: Int {
+        let now = ProcessInfo.processInfo.systemUptime
+        return liveFrameTimes.filter { now - $0 <= 1 }.count
     }
 
     @available(*, unavailable)
@@ -35,15 +60,14 @@ final class MeasureView: NSView {
 
     // MARK: Coordinates
 
-    private var buffer: PixelBuffer { snapshot.buffer }
-
     /// Device pixels per view point (normally the backing scale).
     private var pxPerPt: CGFloat {
-        bounds.width > 0 ? CGFloat(buffer.width) / bounds.width : CGFloat(snapshot.displayScale)
+        if let buffer, bounds.width > 0 { return CGFloat(buffer.width) / bounds.width }
+        return CGFloat(displayScale)
     }
 
     private var displayScaleFactor: Double {
-        session?.scaleMode.factor(displayScale: snapshot.displayScale) ?? snapshot.displayScale
+        session?.scaleMode.factor(displayScale: displayScale) ?? displayScale
     }
 
     private func devicePoint(_ p: NSPoint) -> CGPoint {
@@ -51,9 +75,11 @@ final class MeasureView: NSView {
     }
 
     private func pixel(_ device: CGPoint) -> PixelPoint {
-        PixelPoint(
-            x: min(max(Int(device.x.rounded(.down)), 0), buffer.width - 1),
-            y: min(max(Int(device.y.rounded(.down)), 0), buffer.height - 1)
+        let w = buffer?.width ?? Int((bounds.width * pxPerPt).rounded())
+        let h = buffer?.height ?? Int((bounds.height * pxPerPt).rounded())
+        return PixelPoint(
+            x: min(max(Int(device.x.rounded(.down)), 0), max(w - 1, 0)),
+            y: min(max(Int(device.y.rounded(.down)), 0), max(h - 1, 0))
         )
     }
 
@@ -73,7 +99,7 @@ final class MeasureView: NSView {
     // MARK: Hover
 
     func refreshHover() {
-        if let p = hoverPixel, let session {
+        if let p = hoverPixel, let session, let buffer, buffer.contains(p) {
             hoverSnap = session.detector.snap(at: p, in: buffer)
         } else {
             hoverSnap = nil
@@ -135,6 +161,12 @@ final class MeasureView: NSView {
 
     override func mouseMoved(with event: NSEvent) {
         NSCursor.crosshair.set()
+        // After ⌘-Tab another app holds the keyboard; take it back as soon as the mouse moves
+        // over the overlay, so Esc and the mode keys keep working.
+        if let window, !window.isKeyWindow {
+            window.makeKey()
+            window.makeFirstResponder(self)
+        }
         setHover(convert(event.locationInWindow, from: nil))
     }
 
@@ -146,7 +178,7 @@ final class MeasureView: NSView {
         case .hover:
             if let m = hoverMeasurement { pin(m) }
         case .object:
-            guard let p = hoverPixel else { return }
+            guard let p = hoverPixel, let buffer, buffer.contains(p) else { return }
             let detector = ObjectDetector(from: session.detector)
             let result = detector.objectBounds(at: p, in: buffer)
             pin(.box(result.rect))
@@ -190,7 +222,7 @@ final class MeasureView: NSView {
 
     /// The measurement currently being dragged out, with snapping unless ⌘ is held.
     private var dragMeasurement: ScreenMeasurement? {
-        guard let session, let drag else { return nil }
+        guard let session, let drag, let buffer else { return nil }
         let snapping = !modifiers.contains(.command)
         let detector = session.detector
         switch session.mode {
@@ -292,6 +324,10 @@ final class MeasureView: NSView {
         let hud = hudLayout
         reservedRect = hud?.rect.insetBy(dx: -4, dy: -4)
         defer { reservedRect = nil }
+        if isLive {
+            NSColor(white: 0, alpha: 0.004).setFill()
+            bounds.fill()
+        }
         for m in pinned { draw(m, style: .pinned) }
         if let m = dragMeasurement {
             draw(m, style: .live)
@@ -415,12 +451,19 @@ final class MeasureView: NSView {
     /// Where the HUD goes on this display, or `nil` if it isn't shown here.
     private var hudLayout: HUDLayout? {
         guard let session, session.showHUD, forceActive || session.isActive(self) else { return nil }
-        var status = "\(session.mode.title)   \(session.scaleMode.label(displayScale: snapshot.displayScale))   Tolerance \(Int((session.tolerance * 100).rounded()))%"
+        var status = "\(session.mode.title)   \(session.scaleMode.label(displayScale: displayScale))   Tolerance \(Int((session.tolerance * 100).rounded()))%"
+        if isLive {
+            status += buffer == nil
+                ? "   Live: waiting for first frame"
+                : "   Live \(liveFPS) fps" + (lastCopyMilliseconds.map { String(format: " · copy %.1f ms", $0) } ?? "")
+        } else {
+            status += "   Frozen"
+        }
         if let p = hoverPixel {
             let fmt = session.lengthFormat
             status += "   x \(fmt.string(pixels: p.x, scale: displayScaleFactor))  y \(fmt.string(pixels: p.y, scale: displayScaleFactor))"
         }
-        let hints = "1–4 mode · S scale · [ ] or ⌥-scroll tolerance · ⌥ outside · ⌘ no snap · ⌘C copy · ⌘Z undo · X clear · H hide · Esc exit"
+        let hints = "1–4 mode · L live/frozen · S scale · [ ] or ⌥-scroll tolerance · ⌥ outside · ⌘ no snap · ⌘C copy · ⌘Z undo · X clear · H hide · Esc exit"
         let s1 = (status as NSString).size(withAttributes: Self.hudStatusAttributes)
         let s2 = (hints as NSString).size(withAttributes: Self.hudHintAttributes)
         let w = max(s1.width, s2.width) + 24

@@ -81,4 +81,15 @@ struct ScanTests {
         let lax = EdgeDetector(tolerance: 1)
         #expect(lax.scan(from: PixelPoint(0, 0), direction: .right, in: buf).kind == .bounds)
     }
+
+    @Test("copying from raw memory keeps pixels and row padding")
+    func copyingRawMemory() {
+        let src = buttonFixture().buffer(format: .bgra8, rowPadding: 32)
+        let copy = src.data.withUnsafeBytes {
+            PixelBuffer(copying: $0, width: src.width, height: src.height, bytesPerRow: src.bytesPerRow, format: .bgra8)
+        }
+        #expect(copy.bytesPerRow == src.bytesPerRow)
+        #expect(copy.color(x: 150, y: 140) == RGBA.blue)
+        #expect(detector.snap(at: PixelPoint(105, 140), in: copy) == detector.snap(at: PixelPoint(105, 140), in: src))
+    }
 }

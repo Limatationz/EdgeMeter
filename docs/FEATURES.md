@@ -307,7 +307,12 @@ Settings stored in `UserDefaults`; export/import as JSON (P2).
 - **Minimum macOS 14**: `SCScreenshotManager` and `SCContentFilter.pointPixelScale` need it.
 - **Overlay in AppKit + Core Graphics**, not SwiftUI `Canvas`: snapshot shown via a layer,
   measurements drawn in a flipped view at device-pixel coordinates (verified 1-px exact).
-- **Screen freezes by default** (like PixelSnap); live mode / re-capture (3.6) later.
+- **Screen freezes by default** (like PixelSnap). **Live mode** is an option (L, remembered):
+  transparent overlay at status-bar level, one `SCStream` per display capped at 30 fps that only
+  delivers frames on change; detection runs on the newest frame. Lets ⌘-Tab and animations
+  through. Offline cost at 3024×1964 on M1 Pro (release): frame copy 0.7 ms, hover snap
+  0.01 ms, freezing a live frame 1.1 ms. ScreenCaptureKit's own cost is shown live in the HUD.
+  L in live mode freezes the newest frame without a new capture.
 - **Inside edges by default**, ⌥ held switches to outside.
 - **Default tolerance 5 %** (≈13/255 per channel), confirmed in the first hands-on test on real
   UIs. 10 % missed light card borders and light-grey buttons; 2 % was too strict. The last used

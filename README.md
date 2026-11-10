@@ -18,9 +18,10 @@ project.yml                source of truth for the Xcode project
 App/Kaliber/               menu-bar app (AppKit)
   GlobalHotKey.swift         ⌃⌥⌘M via Carbon RegisterEventHotKey
   ScreenCapture.swift        permission + per-display ScreenCaptureKit snapshots
+  LiveCapture.swift          live mode: one SCStream per display, frames copied off-main
   MeasureController.swift    starts/stops sessions, permission and error alerts
   MeasureSession.swift       shared mode/scale/tolerance, keyboard commands
-  OverlayWindow.swift        borderless window per display showing the frozen snapshot
+  OverlayWindow.swift        non-activating panel per display, frozen (snapshot) or live (transparent)
   MeasureView.swift          input for all modes, device-pixel drawing, HUD
   DebugRenderer.swift        DEBUG only: renders the overlay over a synthetic UI to PNG
 Packages/KaliberCore/      pure-Swift measurement core, no AppKit dependency
@@ -32,7 +33,7 @@ Packages/KaliberCore/      pure-Swift measurement core, no AppKit dependency
     AreaSnapper.swift        snaps a dragged rect's four sides to edges
     ScreenMeasurement.swift  pinned measurement model + clipboard text
     Units.swift              scale modes (Auto/1×/2×/3×) and length formatting
-  Tests/KaliberCoreTests/  47 tests against synthetic images (boxes, glyphs, gradients, AA fringes)
+  Tests/KaliberCoreTests/  51 tests against synthetic images (boxes, glyphs, gradients, AA fringes)
 docs/FEATURES.md           feature catalog and roadmap
 ```
 
@@ -58,6 +59,7 @@ On first use macOS asks for Screen Recording permission – grant it, then resta
 | Key | Action |
 |---|---|
 | 1 / 2 / 3 / 4 | Hover / Two-point / Object / Area mode |
+| L | Toggle live / frozen (remembered). Live: screen stays real, ⌘-Tab works, HUD shows fps |
 | Click | Pin hover measurement, or measure the clicked object (mode 3) |
 | Drag | Two-point line (axis-locked) or area (modes 2, 4) |
 | ⌥ (hold) | Outside edges instead of inside (hover) |

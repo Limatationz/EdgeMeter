@@ -43,20 +43,42 @@ final class MeasureSession {
     /// Snap radius for two-point and area mode, in points (converted per display).
     let snapRadiusPoints: Double = 6
 
-    private let snapshots: [DisplaySnapshot]
+    /// Live mode (transparent overlay, continuous capture) vs. frozen snapshot.
+    /// Toggled with L and remembered across sessions.
+    private(set) var isLive: Bool
+
+    static var storedLiveMode: Bool { UserDefaults.standard.bool(forKey: liveModeKey) }
+    private static let liveModeKey = "liveMode"
+
+    private let screens: [NSScreen]
+    private let initialSnapshots: [DisplaySnapshot]
     private var windows: [OverlayWindow] = []
+    private var liveCapture: LiveCapture?
     private let onEnd: () -> Void
     private var ended = false
 
-    init(snapshots: [DisplaySnapshot], onEnd: @escaping () -> Void) {
-        self.snapshots = snapshots
+    /// - Parameters:
+    ///   - snapshots: frozen captures to start with; ignored when starting live.
+    init(screens: [NSScreen], snapshots: [DisplaySnapshot], live: Bool, onEnd: @escaping () -> Void) {
+        self.screens = screens
+        self.initialSnapshots = snapshots
+        self.isLive = live
         self.onEnd = onEnd
     }
 
     var detector: EdgeDetector { EdgeDetector(tolerance: tolerance, metric: .maxChannel) }
 
     func begin() {
-        windows = snapshots.map { OverlayWindow(snapshot: $0, session: self) }
+        windows = screens.map { OverlayWindow(screen: $0, session: self) }
+        if isLive {
+            startLive()
+        } else {
+            for window in windows {
+                if let snap = initialSnapshots.first(where: { $0.screen.displayID == window.displayID }) {
+                    window.showFrozen(image: snap.image, buffer: snap.buffer)
+                }
+            }
+        }
         for window in windows { window.orderFrontRegardless() }
         if let key = windowUnderMouse ?? windows.first {
             key.makeKeyAndOrderFront(nil)
@@ -69,6 +91,8 @@ final class MeasureSession {
     func end() {
         guard !ended else { return }
         ended = true
+        liveCapture?.stop()
+        liveCapture = nil
         for window in windows {
             window.orderOut(nil)
             window.close()
@@ -102,6 +126,63 @@ final class MeasureSession {
 
     func redrawAll() {
         for window in windows { window.measureView.needsDisplay = true }
+    }
+
+    // MARK: Live / frozen
+
+    func toggleLive() {
+        if isLive { freeze() } else { goLive() }
+    }
+
+    private func goLive() {
+        isLive = true
+        UserDefaults.standard.set(true, forKey: Self.liveModeKey)
+        for window in windows { window.showLive() }
+        startLive()
+        refreshAll()
+    }
+
+    /// Freezes the newest live frame of every display – no new capture needed.
+    private func freeze() {
+        liveCapture?.stop()
+        liveCapture = nil
+        isLive = false
+        UserDefaults.standard.set(false, forKey: Self.liveModeKey)
+        for window in windows {
+            guard let buffer = window.measureView.buffer,
+                  let space = window.screen?.colorSpace?.cgColorSpace ?? CGColorSpace(name: CGColorSpace.sRGB),
+                  let image = buffer.makeCGImage(colorSpace: space)
+            else { continue }
+            window.showFrozen(image: image, buffer: buffer)
+        }
+        refreshAll()
+    }
+
+    private func startLive() {
+        let capture = LiveCapture(
+            onFrame: { [weak self] frame in self?.receive(frame) },
+            onError: { [weak self] error in self?.liveFailed(error) }
+        )
+        liveCapture = capture
+        Task { [weak self] in
+            do {
+                try await capture.start(screens: self?.screens ?? [])
+            } catch {
+                self?.liveFailed(error)
+            }
+        }
+    }
+
+    private func receive(_ frame: LiveFrame) {
+        guard isLive, !ended else { return }
+        windows.first { $0.displayID == frame.displayID }?
+            .measureView.setBuffer(frame.buffer, copyMilliseconds: frame.copyMilliseconds)
+    }
+
+    private func liveFailed(_ error: Error) {
+        guard !ended else { return }
+        NSLog("Kaliber: live capture failed: \(error)")
+        activeView?.flash("Live capture failed: \(error.localizedDescription)")
     }
 
     // MARK: Keyboard
@@ -140,6 +221,8 @@ final class MeasureSession {
         switch key {
         case "1", "2", "3", "4":
             if let n = Int(key), let m = MeasureMode(rawValue: n) { mode = m }
+        case "l":
+            toggleLive()
         case "s":
             scaleMode = scaleMode.next
         case "h":

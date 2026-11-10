@@ -32,6 +32,16 @@ struct CoreGraphicsBridgeTests {
         #expect(buf.color(x: 99, y: 125) == RGBA.white)
     }
 
+    @Test("round-trips through makeCGImage", arguments: [PixelFormat.bgra8, .rgba8])
+    func roundTrip(format: PixelFormat) throws {
+        let original = buttonFixture().buffer(format: format, rowPadding: 16)
+        let image = try #require(original.makeCGImage())
+        let back = try #require(PixelBuffer(cgImage: image))
+        for p in [PixelPoint(5, 5), PixelPoint(150, 140), PixelPoint(123, 125), PixelPoint(399, 299)] {
+            #expect(back.color(at: p) == original.color(at: p))
+        }
+    }
+
     @Test("detectors work on the converted image")
     func detection() throws {
         let buf = try #require(PixelBuffer(cgImage: makeImage()))

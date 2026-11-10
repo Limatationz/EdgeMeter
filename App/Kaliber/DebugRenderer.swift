@@ -18,7 +18,7 @@ enum DebugRenderer {
         let snapshots = NSScreen.screens.map {
             DisplaySnapshot(screen: $0, image: image, buffer: buffer, displayScale: 2)
         }
-        let session = MeasureSession(snapshots: snapshots) { exit(0) }
+        let session = MeasureSession(screens: NSScreen.screens, snapshots: snapshots, live: false) { exit(0) }
         Task { @MainActor in
             // Reproduce the hot-key situation: another app is frontmost when measuring starts.
             NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.finder").first?.activate()
@@ -81,10 +81,17 @@ enum DebugRenderer {
             throw CaptureError.conversionFailed
         }
         let snapshot = DisplaySnapshot(screen: screen, image: image, buffer: buffer, displayScale: 2)
-        let session = MeasureSession(snapshots: [snapshot]) {}
+        let session = MeasureSession(screens: [screen], snapshots: [snapshot], live: false) {}
         let size = NSSize(width: 600, height: 400)
-        let view = MeasureView(snapshot: snapshot, session: session)
+        let view = MeasureView(screen: screen, session: session)
         view.frame = NSRect(origin: .zero, size: size)
+        if UserDefaults.standard.bool(forKey: "demoLiveHUD") {
+            // Simulate a few live frames so the HUD shows live statistics.
+            view.isLive = true
+            for _ in 0..<5 { view.setBuffer(buffer, copyMilliseconds: 0.7) }
+        } else {
+            view.setBuffer(buffer)
+        }
         view.forceActive = true
 
         let detector = session.detector

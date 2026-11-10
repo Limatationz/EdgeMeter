@@ -10,6 +10,7 @@
 		0A4156A13D47BE7FF3755C6A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3F6802F684CCD22F181C4C /* AppDelegate.swift */; };
 		0A849802154761D51CCE6965 /* GlobalHotKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74CA00B7FD90472219DE837A /* GlobalHotKey.swift */; };
 		0DD832D14C231F23BB7AA639 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A96FBA4893CB5030DCB58E7 /* main.swift */; };
+		304398467E291D219721BFD2 /* LiveCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C9C66F7F9780F9B0600DC /* LiveCapture.swift */; };
 		32A2C8EC6EEF1766C68560B7 /* KaliberCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6354B1557E6A3AF4B347B3B0 /* KaliberCore */; };
 		379D6CD2D05F5D7F2EEFA024 /* MeasureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067D029E7E91DCEB0B931C94 /* MeasureView.swift */; };
 		3B38BFA02F9315A12F978E41 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301BE796CE3646654FA8AC11 /* StatusBarController.swift */; };
@@ -33,6 +34,7 @@
 		74CA00B7FD90472219DE837A /* GlobalHotKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotKey.swift; sourceTree = "<group>"; };
 		A1FED75AC942E03072DBE50C /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
 		EA9451A195589B6927F84602 /* MeasureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureController.swift; sourceTree = "<group>"; };
+		F14C9C66F7F9780F9B0600DC /* LiveCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCapture.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 				5B3F6802F684CCD22F181C4C /* AppDelegate.swift */,
 				46E3E6083A368495928AE294 /* DebugRenderer.swift */,
 				74CA00B7FD90472219DE837A /* GlobalHotKey.swift */,
+				F14C9C66F7F9780F9B0600DC /* LiveCapture.swift */,
 				0A96FBA4893CB5030DCB58E7 /* main.swift */,
 				EA9451A195589B6927F84602 /* MeasureController.swift */,
 				3EEDB317E3C933362D87E164 /* MeasureSession.swift */,
@@ -164,6 +167,7 @@
 				0A4156A13D47BE7FF3755C6A /* AppDelegate.swift in Sources */,
 				DF396061D38BEA783D6D89E3 /* DebugRenderer.swift in Sources */,
 				0A849802154761D51CCE6965 /* GlobalHotKey.swift in Sources */,
+				304398467E291D219721BFD2 /* LiveCapture.swift in Sources */,
 				40D4AEA5ACC7E81620FC5F85 /* MeasureController.swift in Sources */,
 				77016086FEF6E4D708B367F2 /* MeasureSession.swift in Sources */,
 				379D6CD2D05F5D7F2EEFA024 /* MeasureView.swift in Sources */,

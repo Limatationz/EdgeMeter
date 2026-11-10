@@ -1,7 +1,10 @@
 import AppKit
+import KaliberCore
 
-/// Borderless full-screen window above everything, showing the frozen snapshot of one
-/// display with the measurement layer on top (FEATURES.md 3.3, 17).
+/// Borderless full-screen window above everything for one display (FEATURES.md 3.3, 17).
+///
+/// *Frozen*: shows a snapshot under the measurement layer and covers the screen.
+/// *Live*: transparent; the real screen shows through and frames come from a stream.
 ///
 /// It is a *non-activating panel*: it can become the key window and receive keyboard
 /// events while Kaliber stays a background app. A plain NSWindow needs the app to be
@@ -9,17 +12,20 @@ import AppKit
 /// system may ignore – the keys then go to the previously active app.
 final class OverlayWindow: NSPanel {
     let measureView: MeasureView
+    let displayID: CGDirectDisplayID?
+    private let container: NSView
+    private var snapshotView: SnapshotView?
 
-    init(snapshot: DisplaySnapshot, session: MeasureSession) {
-        let frame = snapshot.screen.frame
-        measureView = MeasureView(snapshot: snapshot, session: session)
+    init(screen: NSScreen, session: MeasureSession) {
+        let frame = screen.frame
+        displayID = screen.displayID
+        measureView = MeasureView(screen: screen, session: session)
+        container = NSView(frame: NSRect(origin: .zero, size: frame.size))
         super.init(contentRect: frame, styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
         setFrame(frame, display: false)
-        level = .screenSaver
         collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary, .ignoresCycle]
-        isOpaque = true
-        backgroundColor = .black
         hasShadow = false
+        // Explicitly false: receive mouse events even where the window is transparent (live mode).
         ignoresMouseEvents = false
         acceptsMouseMovedEvents = true
         isReleasedWhenClosed = false
@@ -28,19 +34,42 @@ final class OverlayWindow: NSPanel {
         becomesKeyOnlyIfNeeded = false
         hidesOnDeactivate = false
 
-        let container = NSView(frame: NSRect(origin: .zero, size: frame.size))
-        let snapshotView = SnapshotView(image: snapshot.image, frame: container.bounds)
-        snapshotView.autoresizingMask = [.width, .height]
         measureView.frame = container.bounds
         measureView.autoresizingMask = [.width, .height]
-        container.addSubview(snapshotView)
         container.addSubview(measureView)
         contentView = container
         makeFirstResponder(measureView)
+        showLive() // neutral state until a mode is chosen
     }
 
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
+
+    /// Frozen: snapshot below the measurement layer; covers everything incl. the menu bar.
+    func showFrozen(image: CGImage, buffer: PixelBuffer) {
+        snapshotView?.removeFromSuperview()
+        let view = SnapshotView(image: image, frame: container.bounds)
+        view.autoresizingMask = [.width, .height]
+        container.addSubview(view, positioned: .below, relativeTo: measureView)
+        snapshotView = view
+        isOpaque = true
+        backgroundColor = .black
+        level = .screenSaver
+        measureView.isLive = false
+        measureView.setBuffer(buffer)
+    }
+
+    /// Live: transparent, so apps (and app switching) stay visible underneath. Sits just
+    /// above the menu bar instead of at screen-saver level, so system UI like the ⌘-Tab
+    /// switcher can still appear on top.
+    func showLive() {
+        snapshotView?.removeFromSuperview()
+        snapshotView = nil
+        isOpaque = false
+        backgroundColor = .clear
+        level = .statusBar
+        measureView.isLive = true
+    }
 }
 
 /// Shows the frozen capture via a layer, so mouse moves never redraw the full image.

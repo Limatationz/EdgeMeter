@@ -40,6 +40,18 @@ public struct PixelBuffer: Sendable {
         self.data = data
     }
 
+    /// Copies pixels out of foreign memory, e.g. a locked `CVPixelBuffer` from a live
+    /// ScreenCaptureKit stream. One `memcpy`; row padding is kept as is.
+    public init(copying bytes: UnsafeRawBufferPointer, width: Int, height: Int, bytesPerRow: Int, format: PixelFormat) {
+        let count = bytesPerRow * height
+        precondition(bytes.count >= count, "source buffer too small")
+        let data = [UInt8](unsafeUninitializedCapacity: count) { dst, initialized in
+            dst.baseAddress!.initialize(from: bytes.baseAddress!.assumingMemoryBound(to: UInt8.self), count: count)
+            initialized = count
+        }
+        self.init(width: width, height: height, bytesPerRow: bytesPerRow, format: format, data: data)
+    }
+
     /// Creates a buffer filled with a single color.
     public init(width: Int, height: Int, format: PixelFormat = .rgba8, fill: RGBA) {
         var data = [UInt8](repeating: 0, count: width * height * format.bytesPerPixel)
