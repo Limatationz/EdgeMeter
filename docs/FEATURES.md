@@ -309,5 +309,6 @@ Settings stored in `UserDefaults`; export/import as JSON (P2).
   measurements drawn in a flipped view at device-pixel coordinates (verified 1-px exact).
 - **Screen freezes by default** (like PixelSnap); live mode / re-capture (3.6) later.
 - **Inside edges by default**, ⌥ held switches to outside.
-- **Default tolerance 2 %** (≈5/255 per channel). 10 % missed light card borders and
-  light-grey buttons on a synthetic UI.
+- **Default tolerance 5 %** (≈13/255 per channel), confirmed in the first hands-on test on real
+  UIs. 10 % missed light card borders and light-grey buttons; 2 % was too strict. The last used
+  value is remembered across sessions (UserDefaults key `edgeTolerance`).

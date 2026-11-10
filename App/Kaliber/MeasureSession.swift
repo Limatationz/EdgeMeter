@@ -20,9 +20,24 @@ enum MeasureMode: Int, CaseIterable {
 final class MeasureSession {
     var mode: MeasureMode = .hover { didSet { refreshAll() } }
     var scaleMode: ScaleMode = .auto { didSet { refreshAll() } }
-    /// 0.02 ≈ 5 of 255 per channel: catches subtle UI edges (light borders, hairline
-    /// separators) while ignoring capture noise. Adjustable live with [ ] and ⌥-scroll.
-    var tolerance: Double = 0.02 { didSet { refreshAll() } }
+    /// Edge tolerance, remembered across sessions. Default 0.05 ≈ 13 of 255 per channel:
+    /// found by hand-testing on real UIs to catch light borders while ignoring
+    /// anti-aliasing and subtle gradients. Adjustable live with [ ] and ⌥-scroll.
+    var tolerance: Double = MeasureSession.storedTolerance {
+        didSet {
+            UserDefaults.standard.set(tolerance, forKey: Self.toleranceKey)
+            refreshAll()
+        }
+    }
+
+    static let defaultTolerance = 0.05
+    private static let toleranceKey = "edgeTolerance"
+
+    private static var storedTolerance: Double {
+        guard let value = UserDefaults.standard.object(forKey: toleranceKey) as? Double,
+              (0...1).contains(value) else { return defaultTolerance }
+        return value
+    }
     var showHUD = true { didSet { redrawAll() } }
     let lengthFormat = LengthFormat(maxDecimals: 1)
     /// Snap radius for two-point and area mode, in points (converted per display).
