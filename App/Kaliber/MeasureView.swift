@@ -388,7 +388,9 @@ final class MeasureView: NSView {
             draw(m, style: .live)
         }
         let active = forceActive || (session?.isActive(self) ?? false)
-        if active, session?.showLoupe == true, let p = hoverPixel, let buffer { drawLoupe(around: p, in: buffer) }
+        if active, session?.showLoupe == true, let p = hoverPixel, let buffer {
+            drawLoupe(around: p, in: buffer, measurement: dragMeasurement ?? hoverMeasurement)
+        }
         if let hud { drawHUD(hud) }
         if active, let flashText { drawFlash(flashText) }
     }
@@ -400,8 +402,9 @@ final class MeasureView: NSView {
     private static let loupeCell: CGFloat = 6
 
     /// Magnified device pixels around `p`, read straight from the buffer (Kaliber's own
-    /// windows are never in it). Sits below-left of the cursor, away from hover labels.
-    private func drawLoupe(around p: PixelPoint, in buffer: PixelBuffer) {
+    /// windows are never in it), with the current measurement on top so small edges can be
+    /// checked. Sits below-left of the cursor, away from hover labels.
+    private func drawLoupe(around p: PixelPoint, in buffer: PixelBuffer, measurement: ScreenMeasurement?) {
         guard let ctx = NSGraphicsContext.current?.cgContext,
               let space = window?.screen?.colorSpace?.cgColorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)
         else { return }
@@ -450,6 +453,9 @@ final class MeasureView: NSView {
         grid.lineWidth = hairline
         NSColor.gray.withAlphaComponent(0.25).setStroke()
         grid.stroke()
+        if let measurement {
+            drawInLoupe(measurement, origin: PixelPoint(x: p.x - r, y: p.y - r), rect: rect)
+        }
         // Center pixel: dark and light outline, visible on any color.
         let center = CGRect(x: rect.minX + CGFloat(r) * cell, y: rect.minY + CGFloat(r) * cell, width: cell, height: cell)
         let outer = NSBezierPath(rect: center.insetBy(dx: -hairline, dy: -hairline))
@@ -518,6 +524,39 @@ final class MeasureView: NSView {
             let fitsBelow = below.y + 10 < bounds.height && !(reservedRect?.insetBy(dx: -40, dy: -10).contains(below) ?? false)
             drawLabel(label, at: fitsBelow ? below : CGPoint(x: outline.midX, y: outline.minY - 12), color: color)
         }
+    }
+
+    /// The measurement in loupe coordinates: lines through pixel centers, end marks exactly
+    /// on the boundary between the last measured pixel and the edge.
+    private func drawInLoupe(_ m: ScreenMeasurement, origin: PixelPoint, rect: CGRect) {
+        let cell = Self.loupeCell
+        func vx(_ b: Int) -> CGFloat { rect.minX + CGFloat(b - origin.x) * cell }
+        func vy(_ b: Int) -> CGFloat { rect.minY + CGFloat(b - origin.y) * cell }
+        let path = NSBezierPath()
+        func segment(_ a: CGPoint, _ b: CGPoint) { path.move(to: a); path.line(to: b) }
+        func horizontal(y: Int, from: Int, to: Int) {
+            let cy = vy(y) + cell / 2
+            segment(CGPoint(x: vx(from), y: cy), CGPoint(x: vx(to), y: cy))
+            for b in [from, to] { segment(CGPoint(x: vx(b), y: cy - cell), CGPoint(x: vx(b), y: cy + cell)) }
+        }
+        func vertical(x: Int, from: Int, to: Int) {
+            let cx = vx(x) + cell / 2
+            segment(CGPoint(x: cx, y: vy(from)), CGPoint(x: cx, y: vy(to)))
+            for b in [from, to] { segment(CGPoint(x: cx - cell, y: vy(b)), CGPoint(x: cx + cell, y: vy(b))) }
+        }
+        switch m {
+        case let .cross(o, h, vs):
+            if h.length > 0 { horizontal(y: o.y, from: h.start, to: h.end + 1) }
+            if vs.length > 0 { vertical(x: o.x, from: vs.start, to: vs.end + 1) }
+        case let .line(l):
+            if l.axis == .horizontal { horizontal(y: l.line, from: l.lower, to: l.upper) }
+            else { vertical(x: l.line, from: l.lower, to: l.upper) }
+        case let .box(b):
+            path.appendRect(CGRect(x: vx(b.minX), y: vy(b.minY), width: CGFloat(b.width) * cell, height: CGFloat(b.height) * cell))
+        }
+        path.lineWidth = 1
+        accent.withAlphaComponent(0.9).setStroke()
+        path.stroke()
     }
 
     private func strokeLine(from a: CGPoint, to b: CGPoint, color: NSColor) {
