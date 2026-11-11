@@ -22,7 +22,7 @@ final class MeasureSession {
     var scaleMode: ScaleMode = .auto { didSet { refreshAll() } }
     /// Edge tolerance, remembered across sessions. Default 0.04 ≈ 10 of 255 per channel:
     /// found by hand-testing on real UIs to catch very light borders (#F5F5F5 on white)
-    /// while ignoring anti-aliasing and subtle gradients. Adjustable live with [ ] and ⌥-scroll.
+    /// while ignoring anti-aliasing and subtle gradients. Adjustable live with - + ([ ]) and ⌥-scroll.
     var tolerance: Double = MeasureSession.storedTolerance {
         didSet {
             UserDefaults.standard.set(tolerance, forKey: Self.toleranceKey)
@@ -297,6 +297,19 @@ final class MeasureSession {
             }
         }
 
+        // Tolerance by the typed character, so layouts where [ ] need ⌥ (German: ⌥5 ⌥6) work;
+        // - and + (or = on US layouts) are reachable without modifiers everywhere.
+        switch event.characters ?? "" {
+        case "[", "-":
+            tolerance = max(0, tolerance - 0.01)
+            return true
+        case "]", "+", "=":
+            tolerance = min(1, tolerance + 0.01)
+            return true
+        default:
+            break
+        }
+
         switch key {
         case "1", "2", "3", "4":
             if let n = Int(key), let m = MeasureMode(rawValue: n) { mode = m }
@@ -308,10 +321,6 @@ final class MeasureSession {
             showHUD.toggle()
         case "z":
             showLoupe.toggle()
-        case "[":
-            tolerance = max(0, tolerance - 0.01)
-        case "]":
-            tolerance = min(1, tolerance + 0.01)
         case "x":
             activeView?.clearAll()
         default:

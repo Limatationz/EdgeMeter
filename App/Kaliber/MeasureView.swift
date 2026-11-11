@@ -662,7 +662,7 @@ final class MeasureView: NSView {
             let fmt = session.lengthFormat
             status += "   x \(fmt.string(pixels: p.x, scale: displayScaleFactor))  y \(fmt.string(pixels: p.y, scale: displayScaleFactor))"
         }
-        let hints = "1–4 mode · L live/frozen · ←→↑↓ nudge · Z loupe · S scale · [ ] ⌥-scroll tolerance · ⌥ outside · ⌘ no snap · ⌘C copy · ⌘Z undo · X clear · H hide · Esc"
+        let hints = "1–4 mode · L live/frozen · ←→↑↓ nudge · Z loupe · S scale · - + or ⌥-scroll tolerance · ⌥ outside · ⌘ no snap · ⌘C copy · ⌘Z undo · X clear · H hide · Esc"
         let s1 = (status as NSString).size(withAttributes: Self.hudStatusAttributes)
         let s2 = (hints as NSString).size(withAttributes: Self.hudHintAttributes)
         let w = max(s1.width, s2.width) + 24

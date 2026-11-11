@@ -66,7 +66,7 @@ On first use macOS asks for Screen Recording permission – grant it, then resta
 | ⌘ (hold) | Disable snapping while dragging |
 | ← → ↑ ↓ (⇧: 10) | Move the cursor by one device pixel; also moves the end of a drag |
 | Z | Toggle loupe (magnified pixels around the cursor), remembered |
-| [ ] or ⌥-scroll | Edge tolerance −/+ |
+| - / + (also [ ] and =) or ⌥-scroll | Edge tolerance −/+ in 1 % steps |
 | Scroll | Live: scrolls the app underneath. Frozen: ignored |
 | S | Cycle scale: Auto, 1×, 2×, 3× |
 | ⌘C / ⇧⌘C | Copy current / all measurements |
