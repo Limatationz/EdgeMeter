@@ -33,9 +33,7 @@ final class LiveCapture: NSObject, SCStreamDelegate {
     }
 
     func start(screens: [NSScreen]) async throws {
-        let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
-        let pid = ProcessInfo.processInfo.processIdentifier
-        let ownApps = content.applications.filter { $0.processID == pid }
+        let (content, ownApps, ownWindows) = try await Self.shareableContentWithSelf()
         let deliver = onFrame
 
         for screen in screens {
@@ -44,7 +42,10 @@ final class LiveCapture: NSObject, SCStreamDelegate {
             else { continue }
 
             // Exclude Kaliber itself so our own lines and labels never feed back into detection.
-            let filter = SCContentFilter(display: display, excludingApplications: ownApps, exceptingWindows: [])
+            // By app if ScreenCaptureKit lists it (covers windows created later), else by window.
+            let filter = ownApps.isEmpty
+                ? SCContentFilter(display: display, excludingWindows: ownWindows)
+                : SCContentFilter(display: display, excludingApplications: ownApps, exceptingWindows: [])
             let config = SCStreamConfiguration()
             let pixelScale = CGFloat(filter.pointPixelScale)
             config.width = Int((filter.contentRect.width * pixelScale).rounded())
@@ -63,6 +64,26 @@ final class LiveCapture: NSObject, SCStreamDelegate {
             try await stream.startCapture()
             streams.append(stream)
             outputs.append(output)
+        }
+    }
+
+    /// Right after launch ScreenCaptureKit may not list Kaliber or its fresh overlay windows
+    /// yet; excluding nothing would let our own drawing into the frames (wrong spans in the
+    /// first session). Retries briefly until Kaliber shows up.
+    private static func shareableContentWithSelf() async throws
+        -> (SCShareableContent, [SCRunningApplication], [SCWindow]) {
+        let pid = ProcessInfo.processInfo.processIdentifier
+        var attempt = 0
+        while true {
+            let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
+            let apps = content.applications.filter { $0.processID == pid }
+            let windows = content.windows.filter { $0.owningApplication?.processID == pid }
+            attempt += 1
+            if !apps.isEmpty || !windows.isEmpty || attempt >= 20 {
+                NSLog("Kaliber: live capture excludes \(apps.count) app(s), \(windows.count) window(s) after \(attempt) attempt(s)")
+                return (content, apps, windows)
+            }
+            try await Task.sleep(for: .milliseconds(50))
         }
     }
 

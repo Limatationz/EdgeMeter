@@ -118,6 +118,10 @@ final class MeasureView: NSView {
         refreshHover()
     }
 
+    #if DEBUG
+    var debugHoverSnap: SnapResult? { hoverSnap }
+    #endif
+
     /// Debug renderer hook: pin a measurement directly.
     func simulatePin(_ m: ScreenMeasurement) {
         pin(m)

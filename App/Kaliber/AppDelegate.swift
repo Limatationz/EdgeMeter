@@ -10,7 +10,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         #if DEBUG
-        if DebugRenderer.runIfRequested() || DebugRenderer.runSessionIfRequested() { return }
+        if DebugRenderer.runIfRequested() || DebugRenderer.runSessionIfRequested()
+            || DebugRenderer.runLiveProbeIfRequested() { return }
         #endif
         if LiveBenchmark.runIfRequested() { return }
 

@@ -33,6 +33,44 @@ enum DebugRenderer {
         return true
     }
 
+    /// `-liveProbe <dir> [-probeAt x,y]`: starts a real live session, puts the cursor at
+    /// (x, y) (points, top-left of the main display; default: its center), then logs the
+    /// hover spans with the loupe on and off and saves the captured pixels around the
+    /// cursor. Shows whether Kaliber's own drawing leaks into the frames it analyzes.
+    static func runLiveProbeIfRequested() -> Bool {
+        guard let dir = UserDefaults.standard.string(forKey: "liveProbe"),
+              let main = NSScreen.screens.first else { return false }
+        let at = UserDefaults.standard.string(forKey: "probeAt")?.split(separator: ",").compactMap { Double($0) }
+        let point = at?.count == 2 ? CGPoint(x: at![0], y: at![1]) : CGPoint(x: main.frame.midX, y: main.frame.midY)
+        let session = MeasureSession(screens: NSScreen.screens, snapshots: [], live: true) { exit(0) }
+        let originalLoupe = session.showLoupe
+        Task { @MainActor in
+            session.begin()
+            try? await Task.sleep(for: .seconds(1.5))
+            CGWarpMouseCursorPosition(point)
+            CGAssociateMouseAndMouseCursorPosition(1)
+            for loupe in [true, false, true] {
+                session.showLoupe = loupe
+                session.activeView?.syncHoverToMouse()
+                try? await Task.sleep(for: .seconds(1.2))
+                guard let view = session.activeView, let snap = view.debugHoverSnap, let buffer = view.buffer else {
+                    print("probe loupe=\(loupe): no hover"); continue
+                }
+                print("probe loupe=\(loupe) origin=\(snap.origin) h=\(snap.horizontal) v=\(snap.vertical)")
+                let o = snap.origin
+                let crop = CGRect(x: max(o.x - 400, 0), y: max(o.y - 200, 0), width: 800, height: 400)
+                if let image = buffer.makeCGImage(colorSpace: CGColorSpace(name: CGColorSpace.sRGB)!)?.cropping(to: crop) {
+                    let rep = NSBitmapImageRep(cgImage: image)
+                    try? rep.representation(using: .png, properties: [:])?
+                        .write(to: URL(fileURLWithPath: dir).appendingPathComponent("probe-loupe-\(loupe).png"))
+                }
+            }
+            session.showLoupe = originalLoupe
+            session.end()
+        }
+        return true
+    }
+
     static func runIfRequested() -> Bool {
         guard let path = UserDefaults.standard.string(forKey: "renderDemo") else { return false }
         do {
