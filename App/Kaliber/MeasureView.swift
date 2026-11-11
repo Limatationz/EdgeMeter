@@ -27,6 +27,10 @@ final class MeasureView: NSView {
     /// Forces the HUD on regardless of mouse position (used by the debug renderer).
     var forceActive = false
 
+    /// Liquid Glass behind HUD and loupe (macOS 26+, set by the window). Without it the
+    /// HUD and loupe get plain dark backgrounds.
+    var backdrop: GlassBackdrop?
+
     init(screen: NSScreen, session: MeasureSession) {
         displayScale = Double(screen.backingScaleFactor)
         self.session = session
@@ -373,6 +377,15 @@ final class MeasureView: NSView {
     /// Rect labels must avoid (the HUD), set for the duration of one `draw` pass.
     private var reservedRect: CGRect?
 
+    /// Moves the glass to where this pass will draw HUD and loupe.
+    override func viewWillDraw() {
+        super.viewWillDraw()
+        guard let backdrop else { return }
+        let hud = hudLayout?.rect
+        let rim = GlassBackdrop.loupeRim
+        backdrop.update(hud: hud, loupe: loupeRect(avoiding: hud?.insetBy(dx: -4, dy: -4))?.insetBy(dx: -rim, dy: -rim))
+    }
+
     override func draw(_ dirtyRect: NSRect) {
         let hud = hudLayout
         reservedRect = hud?.rect.insetBy(dx: -4, dy: -4)
@@ -387,11 +400,11 @@ final class MeasureView: NSView {
         } else if let m = hoverMeasurement {
             draw(m, style: .live)
         }
-        let active = forceActive || (session?.isActive(self) ?? false)
-        if active, session?.showLoupe == true, let p = hoverPixel, let buffer {
-            drawLoupe(around: p, in: buffer, measurement: dragMeasurement ?? hoverMeasurement)
+        if let rect = loupeRect(avoiding: reservedRect), let p = hoverPixel, let buffer {
+            drawLoupe(in: rect, around: p, in: buffer, measurement: dragMeasurement ?? hoverMeasurement)
         }
         if let hud { drawHUD(hud) }
+        let active = forceActive || (session?.isActive(self) ?? false)
         if active, let flashText { drawFlash(flashText) }
     }
 
@@ -401,33 +414,58 @@ final class MeasureView: NSView {
     private static let loupeRadius = 11
     private static let loupeCell: CGFloat = 6
 
-    /// Magnified device pixels around `p`, read straight from the buffer (Kaliber's own
-    /// windows are never in it), with the current measurement on top so small edges can be
-    /// checked. Sits below-left of the cursor, away from hover labels.
-    private func drawLoupe(around p: PixelPoint, in buffer: PixelBuffer, measurement: ScreenMeasurement?) {
-        guard let ctx = NSGraphicsContext.current?.cgContext,
-              let space = window?.screen?.colorSpace?.cgColorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)
-        else { return }
-        let r = Self.loupeRadius, cell = Self.loupeCell
-        let n = 2 * r + 1
-        let size = CGFloat(n) * cell
+    /// Where the loupe's pixel area goes, or `nil` if no loupe is shown on this display.
+    /// Below-left of the cursor, away from hover labels and `reserved` (the HUD).
+    private func loupeRect(avoiding reserved: CGRect?) -> CGRect? {
+        guard let session, session.showLoupe, forceActive || session.isActive(self),
+              let p = hoverPixel, buffer != nil else { return nil }
+        let size = CGFloat(2 * Self.loupeRadius + 1) * Self.loupeCell
         let cursor = CGPoint(x: c(p.x), y: c(p.y))
-        let gap: CGFloat = 24
+        let gap: CGFloat = 24 + (backdrop == nil ? 0 : GlassBackdrop.loupeRim)
         var rect = CGRect(x: cursor.x - gap - size, y: cursor.y + gap, width: size, height: size)
-        if rect.minX < 4 { rect.origin.x = cursor.x + gap }
-        if rect.maxY > bounds.height - 4 || (reservedRect?.intersects(rect) ?? false) {
+        if rect.minX < 10 { rect.origin.x = cursor.x + gap }
+        if rect.maxY > bounds.height - 10 || (reserved?.intersects(rect.insetBy(dx: -8, dy: -8)) ?? false) {
             rect.origin.y = cursor.y - gap - size
         }
         // Whole device pixels, so the cells stay crisp.
         rect.origin.x = (rect.minX * pxPerPt).rounded() / pxPerPt
         rect.origin.y = (rect.minY * pxPerPt).rounded() / pxPerPt
+        return rect
+    }
+
+    /// Clears a rounded area of this view so the glass below shows through, e.g. where a
+    /// measurement line runs under the HUD.
+    private func punchHole(_ rect: CGRect, radius: CGFloat) {
+        guard let context = NSGraphicsContext.current else { return }
+        context.saveGraphicsState()
+        context.compositingOperation = .copy
+        NSColor.clear.setFill()
+        NSBezierPath(roundedRect: rect, xRadius: radius, yRadius: radius).fill()
+        context.restoreGraphicsState()
+    }
+
+    /// Magnified device pixels around `p`, read straight from the buffer (Kaliber's own
+    /// windows are never in it), with the current measurement on top so small edges can be
+    /// checked. On glass, the pixels sit inside a glass rim; otherwise in a plain frame.
+    private func drawLoupe(in rect: CGRect, around p: PixelPoint, in buffer: PixelBuffer, measurement: ScreenMeasurement?) {
+        guard let ctx = NSGraphicsContext.current?.cgContext,
+              let space = window?.screen?.colorSpace?.cgColorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)
+        else { return }
+        let r = Self.loupeRadius, cell = Self.loupeCell
+        let n = 2 * r + 1
+        let pixelRadius: CGFloat = backdrop == nil ? 6 : GlassBackdrop.loupeCornerRadius - GlassBackdrop.loupeRim
 
         ctx.saveGState()
-        NSColor.black.withAlphaComponent(0.35).setStroke()
-        let shadow = NSBezierPath(roundedRect: rect.insetBy(dx: -1, dy: -1), xRadius: 7, yRadius: 7)
-        shadow.lineWidth = 2
-        shadow.stroke()
-        NSBezierPath(roundedRect: rect, xRadius: 6, yRadius: 6).addClip()
+        if backdrop != nil {
+            let rim = GlassBackdrop.loupeRim
+            punchHole(rect.insetBy(dx: -rim, dy: -rim), radius: GlassBackdrop.loupeCornerRadius)
+        } else {
+            NSColor.black.withAlphaComponent(0.35).setStroke()
+            let shadow = NSBezierPath(roundedRect: rect.insetBy(dx: -1, dy: -1), xRadius: 7, yRadius: 7)
+            shadow.lineWidth = 2
+            shadow.stroke()
+        }
+        NSBezierPath(roundedRect: rect, xRadius: pixelRadius, yRadius: pixelRadius).addClip()
         NSColor.black.setFill()
         rect.fill()
         for j in 0..<n {
@@ -469,9 +507,9 @@ final class MeasureView: NSView {
         inner.stroke()
         ctx.restoreGState()
 
-        let border = NSBezierPath(roundedRect: rect, xRadius: 6, yRadius: 6)
-        border.lineWidth = 1
-        NSColor.white.withAlphaComponent(0.85).setStroke()
+        let border = NSBezierPath(roundedRect: rect, xRadius: pixelRadius, yRadius: pixelRadius)
+        border.lineWidth = backdrop == nil ? 1 : hairline
+        NSColor.white.withAlphaComponent(backdrop == nil ? 0.85 : 0.5).setStroke()
         border.stroke()
 
         // Sizes whose ends are visible in the loupe, below it (above if there's no room).
@@ -665,18 +703,22 @@ final class MeasureView: NSView {
         let hints = "1–4 mode · L live/frozen · ←→↑↓ nudge · Z loupe · S scale · - + or ⌥-scroll tolerance · ⌥ outside · ⌘ no snap · ⌘C copy · ⌘Z undo · X clear · H hide · Esc"
         let s1 = (status as NSString).size(withAttributes: Self.hudStatusAttributes)
         let s2 = (hints as NSString).size(withAttributes: Self.hudHintAttributes)
-        let w = max(s1.width, s2.width) + 24
-        let h = s1.height + s2.height + 16
+        let w = max(s1.width, s2.width) + 32
+        let h = s1.height + s2.height + 18
         let rect = CGRect(x: (bounds.width - w) / 2, y: bounds.height - h - 24, width: w, height: h)
         return HUDLayout(rect: rect, status: status, hints: hints, statusSize: s1, hintSize: s2)
     }
 
     private func drawHUD(_ hud: HUDLayout) {
         let rect = hud.rect
-        NSColor.black.withAlphaComponent(0.75).setFill()
-        NSBezierPath(roundedRect: rect, xRadius: 8, yRadius: 8).fill()
-        (hud.status as NSString).draw(at: CGPoint(x: rect.midX - hud.statusSize.width / 2, y: rect.minY + 6), withAttributes: Self.hudStatusAttributes)
-        (hud.hints as NSString).draw(at: CGPoint(x: rect.midX - hud.hintSize.width / 2, y: rect.minY + 8 + hud.statusSize.height), withAttributes: Self.hudHintAttributes)
+        if backdrop != nil {
+            punchHole(rect, radius: GlassBackdrop.hudCornerRadius)
+        } else {
+            NSColor.black.withAlphaComponent(0.75).setFill()
+            NSBezierPath(roundedRect: rect, xRadius: 8, yRadius: 8).fill()
+        }
+        (hud.status as NSString).draw(at: CGPoint(x: rect.midX - hud.statusSize.width / 2, y: rect.minY + 7), withAttributes: Self.hudStatusAttributes)
+        (hud.hints as NSString).draw(at: CGPoint(x: rect.midX - hud.hintSize.width / 2, y: rect.minY + 9 + hud.statusSize.height), withAttributes: Self.hudHintAttributes)
     }
 
     private func drawFlash(_ text: String) {

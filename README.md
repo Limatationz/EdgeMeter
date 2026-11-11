@@ -25,6 +25,7 @@ App/Kaliber/               menu-bar app (AppKit)
   MeasureSession.swift       shared mode/scale/tolerance, keyboard commands
   OverlayWindow.swift        non-activating panel per display, frozen (snapshot) or live (transparent)
   MeasureView.swift          input for all modes, device-pixel drawing, HUD
+  GlassBackdrop.swift        Liquid Glass behind HUD and loupe (macOS 26+, plain dark before)
   DebugRenderer.swift        DEBUG only: overlay/settings to PNG, demo session, live probe
 Packages/KaliberCore/      pure-Swift measurement core, no AppKit dependency
   Sources/KaliberCore/

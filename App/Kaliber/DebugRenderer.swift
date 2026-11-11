@@ -11,15 +11,26 @@ import SwiftUI
 enum DebugRenderer {
     /// `-demoSession <seconds>`: opens a real overlay session (synthetic image instead of a
     /// capture, so no permission is needed), logs where keyboard input goes, then exits.
+    /// `-demoLive YES` runs it live on the real screen instead, `-demoHover x,y` (device
+    /// pixels) places the hover without moving the cursor, `-demoScreenshot <png>` captures
+    /// the screen with the overlay after one second.
     static func runSessionIfRequested() -> Bool {
-        let seconds = UserDefaults.standard.double(forKey: "demoSession")
+        let defaults = UserDefaults.standard
+        let seconds = defaults.double(forKey: "demoSession")
         guard seconds > 0 else { return false }
+        let live = defaults.bool(forKey: "demoLive")
         let image = syntheticUI()
         guard let buffer = PixelBuffer(cgImage: image) else { return false }
-        let snapshots = NSScreen.screens.map {
+        let snapshots = live ? [] : NSScreen.screens.map {
             DisplaySnapshot(screen: $0, image: image, buffer: buffer, displayScale: 2)
         }
-        let session = MeasureSession(screens: NSScreen.screens, snapshots: snapshots, live: false) { exit(0) }
+        let originalLive = AppSettings.shared.liveMode
+        let session = MeasureSession(screens: NSScreen.screens, snapshots: snapshots, live: live) {
+            AppSettings.shared.liveMode = originalLive
+            exit(0)
+        }
+        let hover = defaults.string(forKey: "demoHover")?.split(separator: ",").compactMap { Int($0) }
+        let screenshot = defaults.string(forKey: "demoScreenshot")
         Task { @MainActor in
             // Reproduce the hot-key situation: another app is frontmost when measuring starts.
             NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.finder").first?.activate()
@@ -28,6 +39,18 @@ enum DebugRenderer {
             session.begin()
             try? await Task.sleep(for: .milliseconds(300))
             print("Kaliber demo session: \(session.keyboardState)")
+            if let hover, hover.count == 2 {
+                session.activeView?.simulateHover(at: PixelPoint(x: hover[0], y: hover[1]))
+            }
+            if let screenshot {
+                try? await Task.sleep(for: .seconds(1))
+                let process = Process()
+                process.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
+                process.arguments = ["-x", "-m", screenshot]
+                try? process.run()
+                process.waitUntilExit()
+                print("Kaliber demo session: screenshot \(screenshot)")
+            }
             try? await Task.sleep(for: .seconds(seconds))
             session.end()
         }

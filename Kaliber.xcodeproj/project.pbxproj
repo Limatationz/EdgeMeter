@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		08987EC4E2DB228DFE86D66B /* SettingsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91CD5B376A018204410CD13 /* SettingsWindow.swift */; };
+		09724766DFFD73AEC0463C72 /* GlassBackdrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC3B53694F263FF4003EC499 /* GlassBackdrop.swift */; };
 		0A4156A13D47BE7FF3755C6A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3F6802F684CCD22F181C4C /* AppDelegate.swift */; };
 		0A849802154761D51CCE6965 /* GlobalHotKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74CA00B7FD90472219DE837A /* GlobalHotKey.swift */; };
 		0DD832D14C231F23BB7AA639 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A96FBA4893CB5030DCB58E7 /* main.swift */; };
@@ -38,6 +39,7 @@
 		6B90EC29E43A9A16058F4F14 /* LiveBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBenchmark.swift; sourceTree = "<group>"; };
 		74CA00B7FD90472219DE837A /* GlobalHotKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotKey.swift; sourceTree = "<group>"; };
 		A1FED75AC942E03072DBE50C /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
+		BC3B53694F263FF4003EC499 /* GlassBackdrop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassBackdrop.swift; sourceTree = "<group>"; };
 		C91CD5B376A018204410CD13 /* SettingsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindow.swift; sourceTree = "<group>"; };
 		EA9451A195589B6927F84602 /* MeasureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureController.swift; sourceTree = "<group>"; };
 		F14C9C66F7F9780F9B0600DC /* LiveCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCapture.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 				5B3F6802F684CCD22F181C4C /* AppDelegate.swift */,
 				457178215BC4759091E03930 /* AppSettings.swift */,
 				46E3E6083A368495928AE294 /* DebugRenderer.swift */,
+				BC3B53694F263FF4003EC499 /* GlassBackdrop.swift */,
 				74CA00B7FD90472219DE837A /* GlobalHotKey.swift */,
 				6B90EC29E43A9A16058F4F14 /* LiveBenchmark.swift */,
 				F14C9C66F7F9780F9B0600DC /* LiveCapture.swift */,
@@ -176,6 +179,7 @@
 				0A4156A13D47BE7FF3755C6A /* AppDelegate.swift in Sources */,
 				EA98BA662EE5200A81C8299E /* AppSettings.swift in Sources */,
 				DF396061D38BEA783D6D89E3 /* DebugRenderer.swift in Sources */,
+				09724766DFFD73AEC0463C72 /* GlassBackdrop.swift in Sources */,
 				0A849802154761D51CCE6965 /* GlobalHotKey.swift in Sources */,
 				7CA4D4D1377FAB10EA30996D /* LiveBenchmark.swift in Sources */,
 				304398467E291D219721BFD2 /* LiveCapture.swift in Sources */,

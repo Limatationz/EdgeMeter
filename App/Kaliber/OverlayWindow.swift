@@ -37,6 +37,11 @@ final class OverlayWindow: NSPanel {
         measureView.frame = container.bounds
         measureView.autoresizingMask = [.width, .height]
         container.addSubview(measureView)
+        if let backdrop = GlassBackdrop.makeIfAvailable(frame: container.bounds) {
+            backdrop.autoresizingMask = [.width, .height]
+            container.addSubview(backdrop, positioned: .below, relativeTo: measureView)
+            measureView.backdrop = backdrop
+        }
         contentView = container
         makeFirstResponder(measureView)
         showLive() // neutral state until a mode is chosen
@@ -50,7 +55,7 @@ final class OverlayWindow: NSPanel {
         snapshotView?.removeFromSuperview()
         let view = SnapshotView(image: image, frame: container.bounds)
         view.autoresizingMask = [.width, .height]
-        container.addSubview(view, positioned: .below, relativeTo: measureView)
+        container.addSubview(view, positioned: .below, relativeTo: nil) // under glass and measure view
         snapshotView = view
         isOpaque = true
         backgroundColor = .black
