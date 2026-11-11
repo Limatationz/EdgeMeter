@@ -2,7 +2,8 @@
 
 > Working title. Kaliber is an open-source macOS screen measurement tool in the spirit of
 > [PixelSnap](https://pixelsnap.com/): measure anything on screen in pixels with smart edge
-> snapping, two-point measurements, object measurements and annotated screenshots.
+> snapping, two-point measurements and object measurements. Kaliber only measures; it is not a
+> screenshot tool.
 >
 > Status: planning. Priorities: **P0** = MVP, **P1** = v1.0, **P2** = later / nice to have.
 > "Parity" marks features PixelSnap 2 has today.
@@ -130,18 +131,15 @@ edges in all four directions and shows the distances without any clicking.
 
 ---
 
-## 8. Screenshots and export
+## 8. Screenshots and export – out of scope
+
+Decided 2026-11-11: Kaliber only measures. Screenshots with or without overlays, saving images,
+SVG export and share sheets (former 8.1–8.5, 8.7, 8.8) are dropped; the system screenshot tool
+covers that. Measurement values leave Kaliber as text (⌘C / ⇧⌘C).
 
 | # | Feature | Prio | Parity | Notes |
 |---|---|---|---|---|
-| 8.1 | Screenshot of the current display including measurement overlays → clipboard | P0 | ✓ | ⇧⌘S or button. |
-| 8.2 | Screenshot of a selected region (drag) with overlays | P0 | ✓ | |
-| 8.3 | Save to file (PNG, default folder, filename pattern) | P0 | ✓ | |
-| 8.4 | Export without overlays (plain capture) | P1 | – | |
-| 8.5 | Export as SVG (capture as image + measurements as vector) | P2 | – | Editable in design tools. |
-| 8.6 | Export measurements as JSON/CSV (for bug reports, regression checks) | P1 | – | |
-| 8.7 | Share sheet (Mail, Messages, Slack…) | P2 | ✓ | |
-| 8.8 | Retina-aware export (@2x pixel data, correct DPI metadata) | P0 | ✓ | |
+| 8.6 | Copy measurements as JSON/CSV text (for bug reports, regression checks) | P2 | – | Text only, no images. |
 
 ---
 
@@ -186,7 +184,6 @@ edges in all four directions and shows the distances without any clicking.
 | ⌘Z / ⇧⌘Z | Undo / redo |
 | ⌫ | Delete selected measurement |
 | ⌘C / ⇧⌘C | Copy value / copy all |
-| ⇧⌘S | Screenshot with overlays to clipboard |
 | S | Cycle scale factor (Auto, 1×, 2×, 3×, custom) |
 | Z / Space | Toggle / hold loupe |
 | H | Toggle HUD |
@@ -227,7 +224,6 @@ Not core, but cheap once we have the snapshot and loupe.
 - Shortcuts: all bindings from section 11.
 - Measuring: default mode, default scale, tolerance, inside/outside, snap radius, nudge step.
 - Appearance: theme, accent color, line width, label size, show coordinates, HUD position.
-- Export: default folder, filename pattern, image format, include overlays, copy to clipboard.
 - Apps: per-app overrides (9.3), excluded apps (9.4).
 - Advanced: perceptual color distance, loupe zoom, debug overlays (show detected edges).
 
@@ -289,18 +285,19 @@ Settings stored in `UserDefaults`; export/import as JSON (P2).
 ## 18. Suggested roadmap
 
 1. **MVP (P0)**: menu bar + shortcut → frozen overlay → hover snap, two-point, object, area →
-   pin, nudge, undo, copy → scale factor → screenshot to clipboard/file → permissions flow →
+   pin, nudge, undo, copy → scale factor → permissions flow →
    multi-display → tests for edge detection → notarized release.
 2. **v1.0 (P1)**: loupe, guides, inside/outside, free-angle, perceptual color distance,
    active-window-only, themes, Sparkle, Homebrew, localization.
 3. **Later (P2)**: measurements list, following windows, AX-based snapping, per-app profiles,
-   SVG export, color picker, App Store.
+   color picker, App Store.
 
 ---
 
 ## 19. Open questions
 
 - Final name (Kaliber is a placeholder; check for conflicts on GitHub / App Store).
+- Scope settled 2026-11-11: measuring only, no screenshot/export features (§8).
 
 ### Decided for the prototype (2026-11-09, revisit if needed)
 
