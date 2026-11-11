@@ -376,6 +376,10 @@ final class MeasureView: NSView {
 
     /// Rect labels must avoid (the HUD), set for the duration of one `draw` pass.
     private var reservedRect: CGRect?
+    /// Labels already drawn in this pass; later labels move out of their way.
+    private var placedLabels: [CGRect] = []
+    /// The loupe, which the live measurement's labels keep clear of.
+    private var loupeObstacle: CGRect?
 
     /// Moves the glass to where this pass will draw HUD and loupe.
     override func viewWillDraw() {
@@ -389,18 +393,25 @@ final class MeasureView: NSView {
     override func draw(_ dirtyRect: NSRect) {
         let hud = hudLayout
         reservedRect = hud?.rect.insetBy(dx: -4, dy: -4)
-        defer { reservedRect = nil }
+        placedLabels.removeAll()
+        defer { reservedRect = nil; placedLabels.removeAll() }
         if isLive {
             NSColor(white: 0, alpha: 0.004).setFill()
             bounds.fill()
         }
         for m in pinned { draw(m, style: .pinned) }
+        // The live measurement keeps its labels next to its lines and may cover pinned
+        // labels; it only avoids its own labels, the HUD and the loupe (all move with it).
+        placedLabels.removeAll()
+        let loupe = loupeRect(avoiding: reservedRect)
+        loupeObstacle = loupe?.insetBy(dx: -GlassBackdrop.loupeRim - 2, dy: -GlassBackdrop.loupeRim - 2)
         if let m = dragMeasurement {
             draw(m, style: .live)
         } else if let m = hoverMeasurement {
             draw(m, style: .live)
         }
-        if let rect = loupeRect(avoiding: reservedRect), let p = hoverPixel, let buffer {
+        loupeObstacle = nil
+        if let rect = loupe, let p = hoverPixel, let buffer {
             drawLoupe(in: rect, around: p, in: buffer, measurement: dragMeasurement ?? hoverMeasurement)
         }
         if let hud { drawHUD(hud) }
@@ -518,7 +529,7 @@ final class MeasureView: NSView {
         let below = band.maxY < bounds.height && !(reservedRect?.intersects(band) ?? false)
         for (i, label) in labels.enumerated() {
             let y = below ? rect.maxY + 12 + CGFloat(i) * spacing : rect.minY - 12 - CGFloat(i) * spacing
-            drawLabel(label, at: CGPoint(x: rect.midX, y: y), color: accent)
+            drawLabel(label, at: CGPoint(x: rect.midX, y: y), color: accent, avoiding: rect.insetBy(dx: -8, dy: -8))
         }
     }
 
@@ -654,15 +665,29 @@ final class MeasureView: NSView {
         .foregroundColor: NSColor.white,
     ]
 
-    private func drawLabel(_ text: String, at p: CGPoint, color: NSColor, anchorLeft: Bool = false) {
+    /// - Parameter extra: another area to keep clear, e.g. the loupe for its own labels.
+    private func drawLabel(_ text: String, at p: CGPoint, color: NSColor, anchorLeft: Bool = false, avoiding extra: CGRect? = nil) {
         let size = (text as NSString).size(withAttributes: Self.labelAttributes)
         let w = size.width + 10, h = size.height + 4
         var rect = CGRect(x: anchorLeft ? p.x : p.x - w / 2, y: p.y - h / 2, width: w, height: h)
         rect.origin.x = min(max(rect.minX, 2), bounds.width - w - 2)
         rect.origin.y = min(max(rect.minY, 2), bounds.height - h - 2)
-        if let reserved = reservedRect, rect.intersects(reserved) {
+        // Out of the way of the HUD and earlier labels: try rows above and below, nearest first.
+        func isFree(_ r: CGRect) -> Bool {
+            r.minY >= 2 && r.maxY <= bounds.height - 2
+                && !(reservedRect?.intersects(r) ?? false)
+                && !(extra?.intersects(r) ?? false)
+                && !(loupeObstacle?.intersects(r) ?? false)
+                && !placedLabels.contains { $0.intersects(r.insetBy(dx: -2, dy: -2)) }
+        }
+        let step = h + 3
+        let offsets: [CGFloat] = [0] + (1...8).flatMap { [-CGFloat($0) * step, CGFloat($0) * step] }
+        if let free = offsets.lazy.map({ rect.offsetBy(dx: 0, dy: $0) }).first(where: isFree) {
+            rect = free
+        } else if let reserved = reservedRect, rect.intersects(reserved) {
             rect.origin.y = reserved.minY - h - 2
         }
+        placedLabels.append(rect)
         color.setFill()
         NSBezierPath(roundedRect: rect, xRadius: 4, yRadius: 4).fill()
         (text as NSString).draw(at: CGPoint(x: rect.minX + 5, y: rect.minY + 2), withAttributes: Self.labelAttributes)
