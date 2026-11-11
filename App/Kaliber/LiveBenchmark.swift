@@ -43,7 +43,7 @@ enum LiveBenchmark {
         let config = "Release"
         #endif
         let stats = Stats()
-        let detector = EdgeDetector(tolerance: MeasureSession.defaultTolerance)
+        let detector = EdgeDetector(tolerance: AppSettings.defaultTolerance)
         let started = now()
 
         let capture = LiveCapture(

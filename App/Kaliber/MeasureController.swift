@@ -31,7 +31,7 @@ final class MeasureController {
 
         do {
             // Live mode needs no up-front capture: the stream delivers frames right away.
-            let live = MeasureSession.storedLiveMode
+            let live = AppSettings.shared.liveMode
             let snapshots = live ? [] : try await ScreenCapture.captureAllScreens()
             let session = MeasureSession(screens: NSScreen.screens, snapshots: snapshots, live: live) { [weak self] in
                 self?.session = nil

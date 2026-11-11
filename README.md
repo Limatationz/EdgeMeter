@@ -16,14 +16,16 @@ Stack: Swift 6, AppKit, ScreenCaptureKit, macOS 14+. License: MIT.
 Kaliber.xcodeproj          generated from project.yml (XcodeGen) – open this in Xcode
 project.yml                source of truth for the Xcode project
 App/Kaliber/               menu-bar app (AppKit)
-  GlobalHotKey.swift         ⌃⌥⌘M via Carbon RegisterEventHotKey
+  GlobalHotKey.swift         global shortcut via Carbon RegisterEventHotKey
+  AppSettings.swift          persisted settings (tolerance, live, loupe, shortcut) + HotKeyCenter
+  SettingsWindow.swift       SwiftUI settings window incl. shortcut recorder, launch at login
   ScreenCapture.swift        permission + per-display ScreenCaptureKit snapshots
   LiveCapture.swift          live mode: one SCStream per display, frames copied off-main
   MeasureController.swift    starts/stops sessions, permission and error alerts
   MeasureSession.swift       shared mode/scale/tolerance, keyboard commands
   OverlayWindow.swift        non-activating panel per display, frozen (snapshot) or live (transparent)
   MeasureView.swift          input for all modes, device-pixel drawing, HUD
-  DebugRenderer.swift        DEBUG only: renders the overlay over a synthetic UI to PNG
+  DebugRenderer.swift        DEBUG only: overlay/settings to PNG, demo session, live probe
 Packages/KaliberCore/      pure-Swift measurement core, no AppKit dependency
   Sources/KaliberCore/
     PixelBuffer.swift        frozen BGRA/RGBA framebuffer copy (+ CGImage bridge)
@@ -53,7 +55,7 @@ brew install xcodegen && xcodegen generate
 
 ## Using it
 
-Press **⌃⌥⌘M** (or the ruler icon › Measure). Measuring starts live on the real screen; L freezes it. Esc leaves.
+Press **⌃⌥⌘M** (or the ruler icon › Measure; the shortcut can be changed under ruler icon › Settings…). Measuring starts live on the real screen; L freezes it. Esc leaves.
 On first use macOS asks for Screen Recording permission – grant it, then restart Kaliber.
 
 | Key | Action |

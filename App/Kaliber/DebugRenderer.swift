@@ -1,6 +1,7 @@
 #if DEBUG
 import AppKit
 import KaliberCore
+import SwiftUI
 
 /// Renders the measurement layer over a synthetic UI into a PNG and exits, so overlay
 /// drawing can be checked without Screen Recording permission or a live session:
@@ -69,6 +70,19 @@ enum DebugRenderer {
             session.end()
         }
         return true
+    }
+
+    /// `-renderSettings <png>`: renders the settings window content and exits.
+    static func renderSettingsIfRequested() -> Bool {
+        guard let path = UserDefaults.standard.string(forKey: "renderSettings") else { return false }
+        let view = NSHostingView(rootView: SettingsView())
+        view.frame.size = view.fittingSize
+        view.layoutSubtreeIfNeeded()
+        guard let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { exit(1) }
+        view.cacheDisplay(in: view.bounds, to: rep)
+        try? rep.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: path))
+        print("Kaliber: wrote \(path) \(view.fittingSize)")
+        exit(0)
     }
 
     static func runIfRequested() -> Bool {

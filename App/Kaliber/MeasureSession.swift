@@ -20,48 +20,34 @@ enum MeasureMode: Int, CaseIterable {
 final class MeasureSession {
     var mode: MeasureMode = .hover { didSet { refreshAll() } }
     var scaleMode: ScaleMode = .auto { didSet { refreshAll() } }
-    /// Edge tolerance, remembered across sessions. Default 0.04 ≈ 10 of 255 per channel:
-    /// found by hand-testing on real UIs to catch very light borders (#F5F5F5 on white)
-    /// while ignoring anti-aliasing and subtle gradients. Adjustable live with - + ([ ]) and ⌥-scroll.
-    var tolerance: Double = MeasureSession.storedTolerance {
-        didSet {
-            UserDefaults.standard.set(tolerance, forKey: Self.toleranceKey)
+    private let settings = AppSettings.shared
+
+    /// Edge tolerance (see `AppSettings.defaultTolerance`), remembered across sessions.
+    /// Adjustable live with - + ([ ]) and ⌥-scroll.
+    var tolerance: Double {
+        get { settings.tolerance }
+        set {
+            settings.tolerance = newValue
             refreshAll()
         }
     }
 
-    static let defaultTolerance = 0.04
-    private static let toleranceKey = "edgeTolerance"
-
-    private static var storedTolerance: Double {
-        guard let value = UserDefaults.standard.object(forKey: toleranceKey) as? Double,
-              (0...1).contains(value) else { return defaultTolerance }
-        return value
-    }
     var showHUD = true { didSet { redrawAll() } }
     /// Magnified pixels around the cursor. Toggled with Z and remembered across sessions.
-    var showLoupe: Bool = UserDefaults.standard.object(forKey: MeasureSession.loupeKey) as? Bool ?? true {
-        didSet {
-            UserDefaults.standard.set(showLoupe, forKey: Self.loupeKey)
+    var showLoupe: Bool {
+        get { settings.showLoupe }
+        set {
+            settings.showLoupe = newValue
             redrawAll()
         }
     }
-    private static let loupeKey = "showLoupe"
     let lengthFormat = LengthFormat(maxDecimals: 1)
     /// Snap radius for two-point and area mode, in points (converted per display).
     let snapRadiusPoints: Double = 6
 
     /// Live mode (transparent overlay, continuous capture, default) vs. frozen snapshot.
-    /// Toggled with L and remembered across sessions.
+    /// Toggled with L; the last choice is saved as `AppSettings.liveMode`.
     private(set) var isLive: Bool
-
-    /// Live is the default: measured at under 10 % of one core even with constant animation
-    /// (FEATURES.md §19), and it keeps ⌘-Tab and moving content usable. Frozen stays one
-    /// key away (L), and the last choice wins.
-    static var storedLiveMode: Bool {
-        UserDefaults.standard.object(forKey: liveModeKey) as? Bool ?? true
-    }
-    private static let liveModeKey = "liveMode"
 
     private let screens: [NSScreen]
     private let initialSnapshots: [DisplaySnapshot]
@@ -150,7 +136,7 @@ final class MeasureSession {
 
     private func goLive() {
         isLive = true
-        UserDefaults.standard.set(true, forKey: Self.liveModeKey)
+        settings.liveMode = true
         for window in windows { window.showLive() }
         startLive()
         refreshAll()
@@ -162,7 +148,7 @@ final class MeasureSession {
         liveCapture?.stop()
         liveCapture = nil
         isLive = false
-        UserDefaults.standard.set(false, forKey: Self.liveModeKey)
+        settings.liveMode = false
         for window in windows {
             guard let buffer = window.measureView.buffer,
                   let space = window.screen?.colorSpace?.cgColorSpace ?? CGColorSpace(name: CGColorSpace.sRGB),

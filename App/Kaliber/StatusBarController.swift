@@ -1,10 +1,12 @@
 import AppKit
 import KaliberCore
 
-/// Owns the menu-bar item (FEATURES.md 3.1). The ⌃⌥⌘M shown in the menu is only a hint;
-/// the actual global shortcut is registered in `AppDelegate`.
+/// Owns the menu-bar item (FEATURES.md 3.1). The shortcut shown next to "Measure" is only a
+/// hint; the global shortcut itself is registered by `HotKeyCenter`.
 @MainActor
-final class StatusBarController: NSObject {
+final class StatusBarController: NSObject, NSMenuDelegate {
+    private let measureItem = NSMenuItem(title: "Measure", action: #selector(startMeasuring), keyEquivalent: "")
+
     func makeStatusItem() -> NSStatusItem {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         if let button = item.button {
@@ -18,11 +20,10 @@ final class StatusBarController: NSObject {
 
     private func makeMenu() -> NSMenu {
         let menu = NSMenu()
+        menu.delegate = self
 
-        let measure = NSMenuItem(title: "Measure", action: #selector(startMeasuring), keyEquivalent: "m")
-        measure.keyEquivalentModifierMask = [.control, .option, .command]
-        measure.target = self
-        menu.addItem(measure)
+        measureItem.target = self
+        menu.addItem(measureItem)
 
         menu.addItem(.separator())
 
@@ -49,7 +50,17 @@ final class StatusBarController: NSObject {
         MeasureController.shared.toggle()
     }
 
+    /// Keeps the shortcut hint in sync with the settings.
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        let hotKey = AppSettings.shared.hotKey
+        // Menus can only show printable keys as key equivalents.
+        let printable = hotKey.keyLabel.count == 1
+        measureItem.keyEquivalent = printable ? hotKey.keyLabel.lowercased() : ""
+        measureItem.keyEquivalentModifierMask = printable ? hotKey.modifierFlags : []
+        measureItem.title = printable ? "Measure" : "Measure (\(hotKey.display))"
+    }
+
     @objc private func openSettings() {
-        // TODO: settings window (FEATURES.md §14).
+        SettingsWindowController.shared.show()
     }
 }

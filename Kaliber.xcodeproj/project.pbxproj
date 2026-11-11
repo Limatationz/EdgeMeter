@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08987EC4E2DB228DFE86D66B /* SettingsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91CD5B376A018204410CD13 /* SettingsWindow.swift */; };
 		0A4156A13D47BE7FF3755C6A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3F6802F684CCD22F181C4C /* AppDelegate.swift */; };
 		0A849802154761D51CCE6965 /* GlobalHotKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74CA00B7FD90472219DE837A /* GlobalHotKey.swift */; };
 		0DD832D14C231F23BB7AA639 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A96FBA4893CB5030DCB58E7 /* main.swift */; };
@@ -20,6 +21,7 @@
 		7CA4D4D1377FAB10EA30996D /* LiveBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B90EC29E43A9A16058F4F14 /* LiveBenchmark.swift */; };
 		9D0F8F6AC2B5592F73146E5C /* ScreenCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B6D6F410602855A3B1412C /* ScreenCapture.swift */; };
 		DF396061D38BEA783D6D89E3 /* DebugRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E3E6083A368495928AE294 /* DebugRenderer.swift */; };
+		EA98BA662EE5200A81C8299E /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457178215BC4759091E03930 /* AppSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,7 @@
 		16B6D6F410602855A3B1412C /* ScreenCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCapture.swift; sourceTree = "<group>"; };
 		301BE796CE3646654FA8AC11 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		3EEDB317E3C933362D87E164 /* MeasureSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureSession.swift; sourceTree = "<group>"; };
+		457178215BC4759091E03930 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		46E3E6083A368495928AE294 /* DebugRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugRenderer.swift; sourceTree = "<group>"; };
 		4FDFF36F3D5D50AD879A8F0C /* Kaliber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kaliber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B3F6802F684CCD22F181C4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -35,6 +38,7 @@
 		6B90EC29E43A9A16058F4F14 /* LiveBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBenchmark.swift; sourceTree = "<group>"; };
 		74CA00B7FD90472219DE837A /* GlobalHotKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotKey.swift; sourceTree = "<group>"; };
 		A1FED75AC942E03072DBE50C /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
+		C91CD5B376A018204410CD13 /* SettingsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindow.swift; sourceTree = "<group>"; };
 		EA9451A195589B6927F84602 /* MeasureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureController.swift; sourceTree = "<group>"; };
 		F14C9C66F7F9780F9B0600DC /* LiveCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCapture.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -55,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				5B3F6802F684CCD22F181C4C /* AppDelegate.swift */,
+				457178215BC4759091E03930 /* AppSettings.swift */,
 				46E3E6083A368495928AE294 /* DebugRenderer.swift */,
 				74CA00B7FD90472219DE837A /* GlobalHotKey.swift */,
 				6B90EC29E43A9A16058F4F14 /* LiveBenchmark.swift */,
@@ -65,6 +70,7 @@
 				067D029E7E91DCEB0B931C94 /* MeasureView.swift */,
 				A1FED75AC942E03072DBE50C /* OverlayWindow.swift */,
 				16B6D6F410602855A3B1412C /* ScreenCapture.swift */,
+				C91CD5B376A018204410CD13 /* SettingsWindow.swift */,
 				301BE796CE3646654FA8AC11 /* StatusBarController.swift */,
 			);
 			path = Kaliber;
@@ -135,6 +141,7 @@
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					25BB0E87B8C4A96E2A1D5E8F = {
+						DevelopmentTeam = 25ZPKD8P86;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -167,6 +174,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A4156A13D47BE7FF3755C6A /* AppDelegate.swift in Sources */,
+				EA98BA662EE5200A81C8299E /* AppSettings.swift in Sources */,
 				DF396061D38BEA783D6D89E3 /* DebugRenderer.swift in Sources */,
 				0A849802154761D51CCE6965 /* GlobalHotKey.swift in Sources */,
 				7CA4D4D1377FAB10EA30996D /* LiveBenchmark.swift in Sources */,
@@ -176,6 +184,7 @@
 				379D6CD2D05F5D7F2EEFA024 /* MeasureView.swift in Sources */,
 				4B50D116A594A52CDC1DC0A0 /* OverlayWindow.swift in Sources */,
 				9D0F8F6AC2B5592F73146E5C /* ScreenCapture.swift in Sources */,
+				08987EC4E2DB228DFE86D66B /* SettingsWindow.swift in Sources */,
 				3B38BFA02F9315A12F978E41 /* StatusBarController.swift in Sources */,
 				0DD832D14C231F23BB7AA639 /* main.swift in Sources */,
 			);
