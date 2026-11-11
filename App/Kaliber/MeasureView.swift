@@ -453,8 +453,9 @@ final class MeasureView: NSView {
         grid.lineWidth = hairline
         NSColor.gray.withAlphaComponent(0.25).setStroke()
         grid.stroke()
+        var labels: [String] = []
         if let measurement {
-            drawInLoupe(measurement, origin: PixelPoint(x: p.x - r, y: p.y - r), rect: rect)
+            labels = drawInLoupe(measurement, origin: PixelPoint(x: p.x - r, y: p.y - r), count: n, rect: rect)
         }
         // Center pixel: dark and light outline, visible on any color.
         let center = CGRect(x: rect.minX + CGFloat(r) * cell, y: rect.minY + CGFloat(r) * cell, width: cell, height: cell)
@@ -472,6 +473,15 @@ final class MeasureView: NSView {
         border.lineWidth = 1
         NSColor.white.withAlphaComponent(0.85).setStroke()
         border.stroke()
+
+        // Sizes whose ends are visible in the loupe, below it (above if there's no room).
+        let spacing: CGFloat = 20
+        let band = CGRect(x: rect.minX - 40, y: rect.maxY, width: rect.width + 80, height: CGFloat(labels.count) * spacing + 6)
+        let below = band.maxY < bounds.height && !(reservedRect?.intersects(band) ?? false)
+        for (i, label) in labels.enumerated() {
+            let y = below ? rect.maxY + 12 + CGFloat(i) * spacing : rect.minY - 12 - CGFloat(i) * spacing
+            drawLabel(label, at: CGPoint(x: rect.midX, y: y), color: accent)
+        }
     }
 
     private func draw(_ m: ScreenMeasurement, style: Style) {
@@ -527,9 +537,13 @@ final class MeasureView: NSView {
     }
 
     /// The measurement in loupe coordinates: lines through pixel centers, end marks exactly
-    /// on the boundary between the last measured pixel and the edge.
-    private func drawInLoupe(_ m: ScreenMeasurement, origin: PixelPoint, rect: CGRect) {
+    /// on the boundary between the last measured pixel and the edge. Returns the labels of
+    /// the parts with an end inside the loupe.
+    private func drawInLoupe(_ m: ScreenMeasurement, origin: PixelPoint, count n: Int, rect: CGRect) -> [String] {
         let cell = Self.loupeCell
+        let format = session?.lengthFormat ?? LengthFormat()
+        var labels: [String] = []
+        func shows(_ b: Int, from o: Int) -> Bool { b >= o && b <= o + n }
         func vx(_ b: Int) -> CGFloat { rect.minX + CGFloat(b - origin.x) * cell }
         func vy(_ b: Int) -> CGFloat { rect.minY + CGFloat(b - origin.y) * cell }
         let path = NSBezierPath()
@@ -546,17 +560,36 @@ final class MeasureView: NSView {
         }
         switch m {
         case let .cross(o, h, vs):
-            if h.length > 0 { horizontal(y: o.y, from: h.start, to: h.end + 1) }
-            if vs.length > 0 { vertical(x: o.x, from: vs.start, to: vs.end + 1) }
+            if h.length > 0 {
+                horizontal(y: o.y, from: h.start, to: h.end + 1)
+                if shows(h.start, from: origin.x) || shows(h.end + 1, from: origin.x) {
+                    labels.append("↔ " + format.label(pixels: h.length, scale: displayScaleFactor))
+                }
+            }
+            if vs.length > 0 {
+                vertical(x: o.x, from: vs.start, to: vs.end + 1)
+                if shows(vs.start, from: origin.y) || shows(vs.end + 1, from: origin.y) {
+                    labels.append("↕ " + format.label(pixels: vs.length, scale: displayScaleFactor))
+                }
+            }
         case let .line(l):
+            let (along, across) = l.axis == .horizontal ? (origin.x, origin.y) : (origin.y, origin.x)
             if l.axis == .horizontal { horizontal(y: l.line, from: l.lower, to: l.upper) }
             else { vertical(x: l.line, from: l.lower, to: l.upper) }
+            if l.line >= across, l.line < across + n, shows(l.lower, from: along) || shows(l.upper, from: along) {
+                labels.append(m.label(format: format, scale: displayScaleFactor))
+            }
         case let .box(b):
-            path.appendRect(CGRect(x: vx(b.minX), y: vy(b.minY), width: CGFloat(b.width) * cell, height: CGFloat(b.height) * cell))
+            let box = CGRect(x: vx(b.minX), y: vy(b.minY), width: CGFloat(b.width) * cell, height: CGFloat(b.height) * cell)
+            path.appendRect(box)
+            if box.intersects(rect), !box.contains(rect) {
+                labels.append(m.label(format: format, scale: displayScaleFactor))
+            }
         }
         path.lineWidth = 1
         accent.withAlphaComponent(0.9).setStroke()
         path.stroke()
+        return labels
     }
 
     private func strokeLine(from a: CGPoint, to b: CGPoint, color: NSColor) {
