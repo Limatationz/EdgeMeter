@@ -20,9 +20,9 @@ enum MeasureMode: Int, CaseIterable {
 final class MeasureSession {
     var mode: MeasureMode = .hover { didSet { refreshAll() } }
     var scaleMode: ScaleMode = .auto { didSet { refreshAll() } }
-    /// Edge tolerance, remembered across sessions. Default 0.05 ≈ 13 of 255 per channel:
-    /// found by hand-testing on real UIs to catch light borders while ignoring
-    /// anti-aliasing and subtle gradients. Adjustable live with [ ] and ⌥-scroll.
+    /// Edge tolerance, remembered across sessions. Default 0.04 ≈ 10 of 255 per channel:
+    /// found by hand-testing on real UIs to catch very light borders (#F5F5F5 on white)
+    /// while ignoring anti-aliasing and subtle gradients. Adjustable live with [ ] and ⌥-scroll.
     var tolerance: Double = MeasureSession.storedTolerance {
         didSet {
             UserDefaults.standard.set(tolerance, forKey: Self.toleranceKey)
@@ -30,7 +30,7 @@ final class MeasureSession {
         }
     }
 
-    static let defaultTolerance = 0.05
+    static let defaultTolerance = 0.04
     private static let toleranceKey = "edgeTolerance"
 
     private static var storedTolerance: Double {

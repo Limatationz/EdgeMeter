@@ -324,6 +324,7 @@ Settings stored in `UserDefaults`; export/import as JSON (P2).
   System side: WindowServer +0.8 points, replayd +0.6 points. Stream start ~170 ms,
   first frame ~180 ms after start. Debug builds: same fps, snap ~1.5 ms (unoptimised core).
 - **Inside edges by default**, ⌥ held switches to outside.
-- **Default tolerance 5 %** (≈13/255 per channel), confirmed in the first hands-on test on real
-  UIs. 10 % missed light card borders and light-grey buttons; 2 % was too strict. The last used
+- **Default tolerance 4 %** (≈10/255 per channel). 5 % worked well in the first hands-on test on
+  real UIs, 4 % additionally catches very light separators (#F5F5F5 on white); 10 % missed light
+  card borders and light-grey buttons, 2–3 % gets caught on shadows and gradients. The last used
   value is remembered across sessions (UserDefaults key `edgeTolerance`).
