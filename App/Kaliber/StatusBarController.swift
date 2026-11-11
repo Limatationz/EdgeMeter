@@ -31,6 +31,10 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         version.isEnabled = false
         menu.addItem(version)
 
+        let intro = NSMenuItem(title: "Introduction…", action: #selector(openIntroduction), keyEquivalent: "")
+        intro.target = self
+        menu.addItem(intro)
+
         let settings = NSMenuItem(title: "Settings…", action: #selector(openSettings), keyEquivalent: ",")
         settings.target = self
         menu.addItem(settings)
@@ -58,6 +62,10 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         measureItem.keyEquivalent = printable ? hotKey.keyLabel.lowercased() : ""
         measureItem.keyEquivalentModifierMask = printable ? hotKey.modifierFlags : []
         measureItem.title = printable ? "Measure" : "Measure (\(hotKey.display))"
+    }
+
+    @objc private func openIntroduction() {
+        OnboardingWindowController.shared.show()
     }
 
     @objc private func openSettings() {

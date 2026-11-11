@@ -21,6 +21,7 @@
 		77016086FEF6E4D708B367F2 /* MeasureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEDB317E3C933362D87E164 /* MeasureSession.swift */; };
 		7CA4D4D1377FAB10EA30996D /* LiveBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B90EC29E43A9A16058F4F14 /* LiveBenchmark.swift */; };
 		9D0F8F6AC2B5592F73146E5C /* ScreenCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B6D6F410602855A3B1412C /* ScreenCapture.swift */; };
+		B77FEBF0A0E701AB0E716FD5 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F16671B1FA6958103E4DA25 /* Onboarding.swift */; };
 		DF396061D38BEA783D6D89E3 /* DebugRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E3E6083A368495928AE294 /* DebugRenderer.swift */; };
 		EA98BA662EE5200A81C8299E /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457178215BC4759091E03930 /* AppSettings.swift */; };
 /* End PBXBuildFile section */
@@ -33,6 +34,7 @@
 		3EEDB317E3C933362D87E164 /* MeasureSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureSession.swift; sourceTree = "<group>"; };
 		457178215BC4759091E03930 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		46E3E6083A368495928AE294 /* DebugRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugRenderer.swift; sourceTree = "<group>"; };
+		4F16671B1FA6958103E4DA25 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		4FDFF36F3D5D50AD879A8F0C /* Kaliber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kaliber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B3F6802F684CCD22F181C4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67716637FC41B48FA369745B /* KaliberCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = KaliberCore; path = Packages/KaliberCore; sourceTree = SOURCE_ROOT; };
@@ -71,6 +73,7 @@
 				EA9451A195589B6927F84602 /* MeasureController.swift */,
 				3EEDB317E3C933362D87E164 /* MeasureSession.swift */,
 				067D029E7E91DCEB0B931C94 /* MeasureView.swift */,
+				4F16671B1FA6958103E4DA25 /* Onboarding.swift */,
 				A1FED75AC942E03072DBE50C /* OverlayWindow.swift */,
 				16B6D6F410602855A3B1412C /* ScreenCapture.swift */,
 				C91CD5B376A018204410CD13 /* SettingsWindow.swift */,
@@ -186,6 +189,7 @@
 				40D4AEA5ACC7E81620FC5F85 /* MeasureController.swift in Sources */,
 				77016086FEF6E4D708B367F2 /* MeasureSession.swift in Sources */,
 				379D6CD2D05F5D7F2EEFA024 /* MeasureView.swift in Sources */,
+				B77FEBF0A0E701AB0E716FD5 /* Onboarding.swift in Sources */,
 				4B50D116A594A52CDC1DC0A0 /* OverlayWindow.swift in Sources */,
 				9D0F8F6AC2B5592F73146E5C /* ScreenCapture.swift in Sources */,
 				08987EC4E2DB228DFE86D66B /* SettingsWindow.swift in Sources */,

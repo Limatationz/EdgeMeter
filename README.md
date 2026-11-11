@@ -19,6 +19,7 @@ App/Kaliber/               menu-bar app (AppKit)
   GlobalHotKey.swift         global shortcut via Carbon RegisterEventHotKey
   AppSettings.swift          persisted settings (tolerance, live, loupe, shortcut) + HotKeyCenter
   SettingsWindow.swift       SwiftUI settings window incl. shortcut recorder, launch at login
+  Onboarding.swift           first-launch introduction, Screen Recording permission flow
   ScreenCapture.swift        permission + per-display ScreenCaptureKit snapshots
   LiveCapture.swift          live mode: one SCStream per display, frames copied off-main
   MeasureController.swift    starts/stops sessions, permission and error alerts

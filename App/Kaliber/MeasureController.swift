@@ -24,8 +24,7 @@ final class MeasureController {
         defer { isStarting = false }
 
         guard ScreenCapture.hasPermission else {
-            ScreenCapture.requestPermission()
-            showPermissionAlert()
+            OnboardingWindowController.shared.show(page: .permission)
             return
         }
 
@@ -40,24 +39,6 @@ final class MeasureController {
             session.begin()
         } catch {
             showError(error)
-        }
-    }
-
-    private func showPermissionAlert() {
-        NSApp.activate()
-        let alert = NSAlert()
-        alert.messageText = "Kaliber needs Screen Recording permission"
-        alert.informativeText = """
-            Kaliber measures the actual pixels on screen, so it needs to capture the display. \
-            Nothing is stored or sent anywhere.
-
-            Enable Kaliber under System Settings › Privacy & Security › Screen & System Audio Recording, \
-            then quit and reopen Kaliber.
-            """
-        alert.addButton(withTitle: "Open System Settings")
-        alert.addButton(withTitle: "Cancel")
-        if alert.runModal() == .alertFirstButtonReturn {
-            ScreenCapture.openPrivacySettings()
         }
     }
 

@@ -11,7 +11,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         #if DEBUG
         if DebugRenderer.runIfRequested() || DebugRenderer.runSessionIfRequested()
             || DebugRenderer.runLiveProbeIfRequested()
-            || DebugRenderer.renderSettingsIfRequested() { return }
+            || DebugRenderer.renderSettingsIfRequested()
+            || DebugRenderer.renderOnboardingIfRequested() { return }
         #endif
         if LiveBenchmark.runIfRequested() { return }
 
@@ -23,9 +24,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             NSLog("Kaliber: could not register \(hotKey.display) – another app may already use it.")
         }
 
-        if !ScreenCapture.hasPermission {
-            // Triggers the system prompt on first launch so the user isn't surprised later.
-            ScreenCapture.requestPermission()
+        if !OnboardingWindowController.shared.isCompleted {
+            // Explains the Screen Recording permission before macOS asks for it.
+            OnboardingWindowController.shared.show()
+        } else if !ScreenCapture.hasPermission {
+            OnboardingWindowController.shared.show(page: .permission)
         }
     }
 

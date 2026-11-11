@@ -108,6 +108,29 @@ enum DebugRenderer {
         exit(0)
     }
 
+    /// `-renderOnboarding <dir>`: opens the real onboarding window, captures each page to
+    /// `onboarding-<n>.png` with `screencapture -l` (offscreen rendering drops SwiftUI text),
+    /// then exits without marking onboarding as completed.
+    static func renderOnboardingIfRequested() -> Bool {
+        guard let dir = UserDefaults.standard.string(forKey: "renderOnboarding") else { return false }
+        Task { @MainActor in
+            for page in OnboardingPage.allCases {
+                OnboardingWindowController.shared.show(page: page)
+                try? await Task.sleep(for: .milliseconds(600))
+                guard let window = NSApp.windows.first(where: { $0.title == "Welcome to Kaliber" }) else { exit(1) }
+                let path = URL(fileURLWithPath: dir).appendingPathComponent("onboarding-\(page.rawValue).png").path
+                let process = Process()
+                process.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
+                process.arguments = ["-x", "-o", "-l", "\(window.windowNumber)", path]
+                try? process.run()
+                process.waitUntilExit()
+            }
+            print("Kaliber: wrote onboarding pages to \(dir)")
+            exit(0)
+        }
+        return true
+    }
+
     static func runIfRequested() -> Bool {
         guard let path = UserDefaults.standard.string(forKey: "renderDemo") else { return false }
         do {
