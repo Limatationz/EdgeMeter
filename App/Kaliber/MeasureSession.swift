@@ -39,6 +39,14 @@ final class MeasureSession {
         return value
     }
     var showHUD = true { didSet { redrawAll() } }
+    /// Magnified pixels around the cursor. Toggled with Z and remembered across sessions.
+    var showLoupe: Bool = UserDefaults.standard.object(forKey: MeasureSession.loupeKey) as? Bool ?? true {
+        didSet {
+            UserDefaults.standard.set(showLoupe, forKey: Self.loupeKey)
+            redrawAll()
+        }
+    }
+    private static let loupeKey = "showLoupe"
     let lengthFormat = LengthFormat(maxDecimals: 1)
     /// Snap radius for two-point and area mode, in points (converted per display).
     let snapRadiusPoints: Double = 6
@@ -261,6 +269,17 @@ final class MeasureSession {
         case 51, 117: // Delete, Forward Delete
             activeView?.deleteLast()
             return true
+        case 123, 124, 125, 126: // ← → ↓ ↑: move by one device pixel, ⇧ by ten
+            guard !command else { return false }
+            let step = shift ? 10 : 1
+            let (dx, dy) = switch event.keyCode {
+            case 123: (-step, 0)
+            case 124: (step, 0)
+            case 125: (0, step)
+            default: (0, -step)
+            }
+            activeView?.nudge(dx: dx, dy: dy)
+            return true
         default:
             break
         }
@@ -287,6 +306,8 @@ final class MeasureSession {
             scaleMode = scaleMode.next
         case "h":
             showHUD.toggle()
+        case "z":
+            showLoupe.toggle()
         case "[":
             tolerance = max(0, tolerance - 0.01)
         case "]":

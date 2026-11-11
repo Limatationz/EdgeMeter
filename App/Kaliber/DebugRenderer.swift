@@ -105,7 +105,13 @@ enum DebugRenderer {
             .snap(PixelRect(x: 138, y: 274, width: 920, height: 82), in: buffer)
         view.simulatePin(.box(area))
         // Live hover inside the card, between title block and text field.
-        view.simulateHover(at: PixelPoint(x: 800, y: 250))
+        // `-demoHover x,y` (device pixels) moves it, e.g. onto an edge to check the loupe.
+        let hover = UserDefaults.standard.string(forKey: "demoHover")?.split(separator: ",").compactMap { Int($0) }
+        if let hover, hover.count == 2 {
+            view.simulateHover(at: PixelPoint(x: hover[0], y: hover[1]))
+        } else {
+            view.simulateHover(at: PixelPoint(x: 800, y: 250))
+        }
 
         // Render at the snapshot's pixel size (2×), so 1-px lines can be checked.
         func makeRep() -> NSBitmapImageRep? {

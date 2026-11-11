@@ -64,6 +64,8 @@ On first use macOS asks for Screen Recording permission – grant it, then resta
 | Drag | Two-point line (axis-locked) or area (modes 2, 4) |
 | ⌥ (hold) | Outside edges instead of inside (hover) |
 | ⌘ (hold) | Disable snapping while dragging |
+| ← → ↑ ↓ (⇧: 10) | Move the cursor by one device pixel; also moves the end of a drag |
+| Z | Toggle loupe (magnified pixels around the cursor), remembered |
 | [ ] or ⌥-scroll | Edge tolerance −/+ |
 | Scroll | Live: scrolls the app underneath. Frozen: ignored |
 | S | Cycle scale: Auto, 1×, 2×, 3× |

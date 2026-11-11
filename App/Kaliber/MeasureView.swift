@@ -263,6 +263,41 @@ final class MeasureView: NSView {
         }
     }
 
+    // MARK: Keyboard nudging
+
+    /// Moves the cursor by whole device pixels. While dragging, the drag end moves along,
+    /// so two-point and area measurements can be finished pixel by pixel.
+    func nudge(dx: Int, dy: Int) {
+        guard let buffer, let current = hoverPixel else { return }
+        let target = PixelPoint(
+            x: min(max(current.x + dx, 0), buffer.width - 1),
+            y: min(max(current.y + dy, 0), buffer.height - 1)
+        )
+        let device: CGPoint
+        if var d = drag {
+            d.current.x += CGFloat(target.x - current.x)
+            d.current.y += CGFloat(target.y - current.y)
+            drag = d
+            device = d.current
+        } else {
+            device = CGPoint(x: CGFloat(target.x) + 0.5, y: CGFloat(target.y) + 0.5)
+        }
+        hoverPixel = target
+        refreshHover()
+        warpCursor(toDevice: device)
+    }
+
+    /// Moves the system cursor without posting events (no Accessibility permission needed).
+    private func warpCursor(toDevice d: CGPoint) {
+        guard let window, let primary = NSScreen.screens.first else { return }
+        let inWindow = convert(NSPoint(x: d.x / pxPerPt, y: d.y / pxPerPt), to: nil)
+        let onScreen = window.convertPoint(toScreen: inWindow)
+        // Quartz display coordinates: origin top-left of the primary display.
+        CGWarpMouseCursorPosition(CGPoint(x: onScreen.x, y: primary.frame.maxY - onScreen.y))
+        // Without this the mouse ignores physical movement for a moment after a warp.
+        CGAssociateMouseAndMouseCursorPosition(1)
+    }
+
     /// Re-reads the cursor position, e.g. after mouse events were passed through for a while.
     func syncHoverToMouse() {
         guard let window else { return }
@@ -348,12 +383,86 @@ final class MeasureView: NSView {
         } else if let m = hoverMeasurement {
             draw(m, style: .live)
         }
-        if let hud { drawHUD(hud) }
         let active = forceActive || (session?.isActive(self) ?? false)
+        if active, session?.showLoupe == true, let p = hoverPixel, let buffer { drawLoupe(around: p, in: buffer) }
+        if let hud { drawHUD(hud) }
         if active, let flashText { drawFlash(flashText) }
     }
 
     private var hairline: CGFloat { 1 / pxPerPt }
+
+    /// Pixels shown on each side of the center pixel, and the size of one shown pixel in points.
+    private static let loupeRadius = 11
+    private static let loupeCell: CGFloat = 6
+
+    /// Magnified device pixels around `p`, read straight from the buffer (Kaliber's own
+    /// windows are never in it). Sits below-left of the cursor, away from hover labels.
+    private func drawLoupe(around p: PixelPoint, in buffer: PixelBuffer) {
+        guard let ctx = NSGraphicsContext.current?.cgContext,
+              let space = window?.screen?.colorSpace?.cgColorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)
+        else { return }
+        let r = Self.loupeRadius, cell = Self.loupeCell
+        let n = 2 * r + 1
+        let size = CGFloat(n) * cell
+        let cursor = CGPoint(x: c(p.x), y: c(p.y))
+        let gap: CGFloat = 24
+        var rect = CGRect(x: cursor.x - gap - size, y: cursor.y + gap, width: size, height: size)
+        if rect.minX < 4 { rect.origin.x = cursor.x + gap }
+        if rect.maxY > bounds.height - 4 || (reservedRect?.intersects(rect) ?? false) {
+            rect.origin.y = cursor.y - gap - size
+        }
+        // Whole device pixels, so the cells stay crisp.
+        rect.origin.x = (rect.minX * pxPerPt).rounded() / pxPerPt
+        rect.origin.y = (rect.minY * pxPerPt).rounded() / pxPerPt
+
+        ctx.saveGState()
+        NSColor.black.withAlphaComponent(0.35).setStroke()
+        let shadow = NSBezierPath(roundedRect: rect.insetBy(dx: -1, dy: -1), xRadius: 7, yRadius: 7)
+        shadow.lineWidth = 2
+        shadow.stroke()
+        NSBezierPath(roundedRect: rect, xRadius: 6, yRadius: 6).addClip()
+        NSColor.black.setFill()
+        rect.fill()
+        for j in 0..<n {
+            for i in 0..<n {
+                guard let px = buffer.colorIfInside(x: p.x - r + i, y: p.y - r + j),
+                      let color = CGColor(colorSpace: space, components: [
+                        CGFloat(px.r) / 255, CGFloat(px.g) / 255, CGFloat(px.b) / 255, 1,
+                      ])
+                else { continue }
+                ctx.setFillColor(color)
+                ctx.fill(CGRect(x: rect.minX + CGFloat(i) * cell, y: rect.minY + CGFloat(j) * cell, width: cell, height: cell))
+            }
+        }
+        // Pixel grid.
+        let grid = NSBezierPath()
+        for k in 1..<n {
+            let o = CGFloat(k) * cell + hairline / 2
+            grid.move(to: CGPoint(x: rect.minX + o, y: rect.minY))
+            grid.line(to: CGPoint(x: rect.minX + o, y: rect.maxY))
+            grid.move(to: CGPoint(x: rect.minX, y: rect.minY + o))
+            grid.line(to: CGPoint(x: rect.maxX, y: rect.minY + o))
+        }
+        grid.lineWidth = hairline
+        NSColor.gray.withAlphaComponent(0.25).setStroke()
+        grid.stroke()
+        // Center pixel: dark and light outline, visible on any color.
+        let center = CGRect(x: rect.minX + CGFloat(r) * cell, y: rect.minY + CGFloat(r) * cell, width: cell, height: cell)
+        let outer = NSBezierPath(rect: center.insetBy(dx: -hairline, dy: -hairline))
+        outer.lineWidth = 2 * hairline
+        NSColor.black.withAlphaComponent(0.6).setStroke()
+        outer.stroke()
+        let inner = NSBezierPath(rect: center.insetBy(dx: hairline, dy: hairline))
+        inner.lineWidth = 2 * hairline
+        NSColor.white.setStroke()
+        inner.stroke()
+        ctx.restoreGState()
+
+        let border = NSBezierPath(roundedRect: rect, xRadius: 6, yRadius: 6)
+        border.lineWidth = 1
+        NSColor.white.withAlphaComponent(0.85).setStroke()
+        border.stroke()
+    }
 
     private func draw(_ m: ScreenMeasurement, style: Style) {
         let color = style == .live ? accent : accent.withAlphaComponent(0.85)
@@ -477,7 +586,7 @@ final class MeasureView: NSView {
             let fmt = session.lengthFormat
             status += "   x \(fmt.string(pixels: p.x, scale: displayScaleFactor))  y \(fmt.string(pixels: p.y, scale: displayScaleFactor))"
         }
-        let hints = "1–4 mode · L live/frozen · S scale · [ ] or ⌥-scroll tolerance · ⌥ outside · ⌘ no snap · ⌘C copy · ⌘Z undo · X clear · H hide · Esc exit"
+        let hints = "1–4 mode · L live/frozen · ←→↑↓ nudge · Z loupe · S scale · [ ] ⌥-scroll tolerance · ⌥ outside · ⌘ no snap · ⌘C copy · ⌘Z undo · X clear · H hide · Esc"
         let s1 = (status as NSString).size(withAttributes: Self.hudStatusAttributes)
         let s2 = (hints as NSString).size(withAttributes: Self.hudHintAttributes)
         let w = max(s1.width, s2.width) + 24
