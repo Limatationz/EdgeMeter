@@ -86,13 +86,16 @@ struct OnboardingView: View {
                 Spacer()
                 if model.page != .welcome {
                     Button("Back") { step(-1) }
+                        .glassButtonStyle()
                 }
                 if model.page == .ready {
                     Button("Done", action: onFinish)
                         .keyboardShortcut(.defaultAction)
+                        .glassButtonStyle(prominent: true)
                 } else {
                     Button("Continue") { step(1) }
                         .keyboardShortcut(.defaultAction)
+                        .glassButtonStyle(prominent: true)
                 }
             }
             .padding(.horizontal, 20)
@@ -141,6 +144,7 @@ struct OnboardingView: View {
                         askedForPermission = true
                         if !ScreenCapture.requestPermission() { ScreenCapture.openPrivacySettings() }
                     }
+                    .glassButtonStyle(prominent: true)
                 }
             }
             .padding(12)
@@ -154,6 +158,7 @@ struct OnboardingView: View {
                         .fixedSize(horizontal: false, vertical: true)
                     Spacer()
                     Button("Reopen EdgeMeter") { OnboardingWindowController.relaunch() }
+                        .glassButtonStyle(prominent: true)
                 }
             }
         }
@@ -172,6 +177,7 @@ struct OnboardingView: View {
                     onFinish()
                     MeasureController.shared.toggle()
                 }
+                .glassButtonStyle()
             }
         }
     }

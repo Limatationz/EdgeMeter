@@ -1,4 +1,5 @@
 import AppKit
+import SwiftUI
 
 /// Liquid Glass behind the HUD and the loupe (macOS 26+).
 ///
@@ -62,5 +63,22 @@ final class GlassBackdrop: NSView {
         }
         if view.frame != frame { view.frame = frame }
         view.isHidden = false
+    }
+}
+
+extension View {
+    /// Liquid Glass button style on macOS 26+ (`.glassProminent` for the main action),
+    /// the system default style before.
+    @ViewBuilder
+    func glassButtonStyle(prominent: Bool = false) -> some View {
+        if #available(macOS 26, *) {
+            if prominent {
+                buttonStyle(.glassProminent)
+            } else {
+                buttonStyle(.glass)
+            }
+        } else {
+            self
+        }
     }
 }

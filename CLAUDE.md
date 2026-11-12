@@ -19,7 +19,7 @@ recorded decisions: docs/FEATURES.md (§19).
 - Build: `xcodebuild -project EdgeMeter.xcodeproj -scheme EdgeMeter -configuration Debug -derivedDataPath build build`
 - DEBUG flags on `build/Build/Products/Debug/EdgeMeter.app/Contents/MacOS/EdgeMeter`:
   `-renderDemo <png>` (overlay over a synthetic UI at 2×, with `-demoHover x,y`, `-demoLiveHUD YES`),
-  `-renderSettings <png>`, `-renderOnboarding <dir>` (real window, brief), `-demoSession <s>` (+ `-demoLive YES`, `-demoHover x,y`,
+  `-renderSettings <png>`, `-renderOnboarding <dir>` (real window, brief), `-renderMenuIcon <png>`, `-demoSession <s>` (+ `-demoLive YES`, `-demoHover x,y`,
   `-demoScreenshot <png>` for a real-window screenshot incl. glass), `-liveProbe <dir>`.
   `-renderDemo` draws without glass (classic look); use `-demoScreenshot` to check glass. All configs: `-liveBenchmark <s>`.
 - Don't kill a running EdgeMeter (the user runs it from the Xcode debugger) and don't move the cursor

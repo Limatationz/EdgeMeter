@@ -48,6 +48,7 @@ struct SettingsView: View {
                             Button("Reset") {
                                 shortcutError = settings.setHotKey(.default) ? nil : "\(HotKey.default.display) is not available."
                             }
+                            .glassButtonStyle()
                         }
                     }
                 }
@@ -72,6 +73,7 @@ struct SettingsView: View {
                             .monospacedDigit()
                             .frame(width: 40, alignment: .trailing)
                         Button("Reset") { settings.tolerance = AppSettings.defaultTolerance }
+                            .glassButtonStyle()
                             .disabled(abs(settings.tolerance - AppSettings.defaultTolerance) < 0.001)
                     }
                 }
@@ -146,7 +148,11 @@ final class RecorderButton: NSButton {
 
     init() {
         super.init(frame: .zero)
-        bezelStyle = .rounded
+        if #available(macOS 26, *) {
+            bezelStyle = .glass
+        } else {
+            bezelStyle = .rounded
+        }
         target = self
         action = #selector(toggleRecording)
         updateTitle()

@@ -12,7 +12,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if DebugRenderer.runIfRequested() || DebugRenderer.runSessionIfRequested()
             || DebugRenderer.runLiveProbeIfRequested()
             || DebugRenderer.renderSettingsIfRequested()
-            || DebugRenderer.renderOnboardingIfRequested() { return }
+            || DebugRenderer.renderOnboardingIfRequested()
+            || DebugRenderer.renderMenuIconIfRequested() { return }
         #endif
         if LiveBenchmark.runIfRequested() { return }
 
