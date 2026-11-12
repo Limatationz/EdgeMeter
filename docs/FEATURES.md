@@ -300,7 +300,11 @@ Settings stored in `UserDefaults`; export/import as JSON (P2).
   cask or relevant GitHub project of that name; kaliber.app/.dev are taken, kaliberapp.com was free.
   Nearby: calibre (e-book manager), Kaliber Interactive (Dutch agency). Considered and dropped:
   Caliper/Screen Calipers (existing Mac tools), Vernier, Snapline, Gauge, Edgewise, Spanwise, EdgeMeter.
-  Trademark registers (TMview, DPMA; classes 9/42) not yet checked.
+  TMview (2026-11-12): many KALIBER marks, mostly beer (Diageo), tobacco, feed, clothing. Relevant to
+  software: EU word mark KALIBER 019026343 (KLBR Live Entertainment AB, classes 9/25/32/33/35/41/43/45,
+  filed 2024) and Benelux KALIBER 1290609/1488670 (Kaliber Interactive BV, 35/41/42). National 9/42
+  marks: SE (Sveriges Radio), IT (KALIBER ITALIA), DE kaliber5 (35/41/42). Class 9 goods lists of the EU
+  mark not yet checked; fine for a free open-source tool, re-check before any commercial/App Store use.
 - Scope settled 2026-11-11: measuring only, no screenshot/export features (§8).
 
 ### Decided for the prototype (2026-11-09, revisit if needed)
