@@ -3,8 +3,9 @@
 Open-source screen measurement tool for macOS. Measure distances, sizes and spacing of anything
 on screen, pixel-exact, with smart edge snapping – an open alternative to PixelSnap.
 
-> Status: first usable prototype – global shortcut, frozen overlay per display,
-> hover / two-point / object / area measuring, undo, copy. No settings window or export yet.
+> Status: MVP feature-complete, not yet released – live (or frozen) overlay per display,
+> hover / two-point / object / area measuring, loupe, nudging, undo, copy, settings window,
+> onboarding. Kaliber only measures; it is not a screenshot tool.
 
 - [Feature catalog](docs/FEATURES.md)
 
