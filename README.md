@@ -3,7 +3,7 @@
 Open-source screen measurement tool for macOS. Measure distances, sizes and spacing of anything
 on screen, pixel-exact, with smart edge snapping – an open alternative to PixelSnap.
 
-> Working title. Status: first usable prototype – global shortcut, frozen overlay per display,
+> Status: first usable prototype – global shortcut, frozen overlay per display,
 > hover / two-point / object / area measuring, undo, copy. No settings window or export yet.
 
 - [Feature catalog](docs/FEATURES.md)

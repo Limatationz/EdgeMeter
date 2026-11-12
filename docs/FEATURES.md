@@ -1,6 +1,6 @@
 # Kaliber – Feature Catalog
 
-> Working title. Kaliber is an open-source macOS screen measurement tool in the spirit of
+> Kaliber is an open-source macOS screen measurement tool in the spirit of
 > [PixelSnap](https://pixelsnap.com/): measure anything on screen in pixels with smart edge
 > snapping, two-point measurements and object measurements. Kaliber only measures; it is not a
 > screenshot tool.
@@ -296,7 +296,11 @@ Settings stored in `UserDefaults`; export/import as JSON (P2).
 
 ## 19. Open questions
 
-- Final name (Kaliber is a placeholder; check for conflicts on GitHub / App Store).
+- Name settled 2026-11-12: **Kaliber** (German for caliber/gauge). Checked: no Mac measuring tool, Homebrew
+  cask or relevant GitHub project of that name; kaliber.app/.dev are taken, kaliberapp.com was free.
+  Nearby: calibre (e-book manager), Kaliber Interactive (Dutch agency). Considered and dropped:
+  Caliper/Screen Calipers (existing Mac tools), Vernier, Snapline, Gauge, Edgewise, Spanwise, EdgeMeter.
+  Trademark registers (TMview, DPMA; classes 9/42) not yet checked.
 - Scope settled 2026-11-11: measuring only, no screenshot/export features (§8).
 
 ### Decided for the prototype (2026-11-09, revisit if needed)
