@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Beam -->
+  <rect x="196" y="286" width="632" height="84" rx="20" fill="#FFFFFF"/>
+  <!-- Fixed jaw -->
+  <path d="M196 306 h92 v372 l-46 70 l-46 -70 Z" fill="#FFFFFF"/>
+  <!-- Sliding jaw with housing -->
+  <rect x="588" y="262" width="148" height="132" rx="26" fill="#FFFFFF"/>
+  <path d="M620 380 h92 v298 l-46 70 l-46 -70 Z" fill="#FFFFFF"/>
+</svg>

@@ -1,0 +1,414 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A0BCAB5A278551A0E68E473 /* LiveCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C73BE9EE3E54C9697EB75D9 /* LiveCapture.swift */; };
+		22B5E06E0E091159E53524D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274DA817357A63B008E77B09 /* AppDelegate.swift */; };
+		4588431FE095C19018E33548 /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190024FB250E33D0E0C7A555 /* OverlayWindow.swift */; };
+		516FD6C8791D551CDED0AB15 /* MeasureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3996FB3E411C697547986CD0 /* MeasureSession.swift */; };
+		5CA006D6855F9BC937B861D5 /* MeasureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3EF8C1726B6D997C4883BA /* MeasureView.swift */; };
+		5CECC4BA812E393C1B747A35 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5978F4D143B6582515BEEF34 /* StatusBarController.swift */; };
+		6399FD04AD866CA33F409652 /* LiveBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D4BE8722B0AEFCA019894DB /* LiveBenchmark.swift */; };
+		665276567321C36C91866A3D /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4BDF21217EE355E9D1E41B /* Onboarding.swift */; };
+		8A63F8560575BFFC8CE7B49E /* GlassBackdrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D9A839C8B5B54FAA37F6DB /* GlassBackdrop.swift */; };
+		8BA44219F2B5FF1344D893B6 /* DebugRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F277D42D537B5E081D6F0705 /* DebugRenderer.swift */; };
+		A32BEEEB7B23A86CF755B63D /* SettingsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E5A95B5D3EF45FBAD8581B /* SettingsWindow.swift */; };
+		AD95A3B3639F7B607DBDA11D /* MeasureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0688481DB870E96DA8D43B /* MeasureController.swift */; };
+		B2E241BC2C6F61ACED6BC770 /* EdgeMeterCore in Frameworks */ = {isa = PBXBuildFile; productRef = D5F368EB53CB83C1294380BD /* EdgeMeterCore */; };
+		BD24CF34A0D5393527A7D7C6 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2683BA1AAB2FAC31D33781 /* AppSettings.swift */; };
+		C40864F3D360733BD97A28CD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A154DB45F69F9C3EFC9C669 /* main.swift */; };
+		D808FD2ABB961AF3D5419EBB /* GlobalHotKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA4638118F1DA18734D28A6 /* GlobalHotKey.swift */; };
+		E285238C20E1E8BB4A7C6B97 /* ScreenCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844F5E8FF8F1F18C26EC3C66 /* ScreenCapture.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0D4BE8722B0AEFCA019894DB /* LiveBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBenchmark.swift; sourceTree = "<group>"; };
+		10E5A95B5D3EF45FBAD8581B /* SettingsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindow.swift; sourceTree = "<group>"; };
+		190024FB250E33D0E0C7A555 /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
+		1F2683BA1AAB2FAC31D33781 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		24566E19673467721C6B4D57 /* EdgeMeter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EdgeMeter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		274DA817357A63B008E77B09 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2B4BDF21217EE355E9D1E41B /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
+		3996FB3E411C697547986CD0 /* MeasureSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureSession.swift; sourceTree = "<group>"; };
+		4A154DB45F69F9C3EFC9C669 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		4C73BE9EE3E54C9697EB75D9 /* LiveCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCapture.swift; sourceTree = "<group>"; };
+		5978F4D143B6582515BEEF34 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
+		844F5E8FF8F1F18C26EC3C66 /* ScreenCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCapture.swift; sourceTree = "<group>"; };
+		96E8249CA308E79C26F8612C /* EdgeMeterCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EdgeMeterCore; path = Packages/EdgeMeterCore; sourceTree = SOURCE_ROOT; };
+		9C3EF8C1726B6D997C4883BA /* MeasureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureView.swift; sourceTree = "<group>"; };
+		A3D9A839C8B5B54FAA37F6DB /* GlassBackdrop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassBackdrop.swift; sourceTree = "<group>"; };
+		DD0688481DB870E96DA8D43B /* MeasureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureController.swift; sourceTree = "<group>"; };
+		EDA4638118F1DA18734D28A6 /* GlobalHotKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotKey.swift; sourceTree = "<group>"; };
+		F277D42D537B5E081D6F0705 /* DebugRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugRenderer.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		133BA38BE888264CD694C1DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B2E241BC2C6F61ACED6BC770 /* EdgeMeterCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01986C63B2E3968AAA63A084 = {
+			isa = PBXGroup;
+			children = (
+				9642FE09ED5F5819D50FF5EC /* App */,
+				29684D3E3AFEF8ED853994BA /* Packages */,
+				4B404B10BB2A8A04A6AD4812 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		29684D3E3AFEF8ED853994BA /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				96E8249CA308E79C26F8612C /* EdgeMeterCore */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		4B404B10BB2A8A04A6AD4812 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				24566E19673467721C6B4D57 /* EdgeMeter.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D5FB9EA353BB5D628E9905D /* EdgeMeter */ = {
+			isa = PBXGroup;
+			children = (
+				274DA817357A63B008E77B09 /* AppDelegate.swift */,
+				1F2683BA1AAB2FAC31D33781 /* AppSettings.swift */,
+				F277D42D537B5E081D6F0705 /* DebugRenderer.swift */,
+				A3D9A839C8B5B54FAA37F6DB /* GlassBackdrop.swift */,
+				EDA4638118F1DA18734D28A6 /* GlobalHotKey.swift */,
+				0D4BE8722B0AEFCA019894DB /* LiveBenchmark.swift */,
+				4C73BE9EE3E54C9697EB75D9 /* LiveCapture.swift */,
+				4A154DB45F69F9C3EFC9C669 /* main.swift */,
+				DD0688481DB870E96DA8D43B /* MeasureController.swift */,
+				3996FB3E411C697547986CD0 /* MeasureSession.swift */,
+				9C3EF8C1726B6D997C4883BA /* MeasureView.swift */,
+				2B4BDF21217EE355E9D1E41B /* Onboarding.swift */,
+				190024FB250E33D0E0C7A555 /* OverlayWindow.swift */,
+				844F5E8FF8F1F18C26EC3C66 /* ScreenCapture.swift */,
+				10E5A95B5D3EF45FBAD8581B /* SettingsWindow.swift */,
+				5978F4D143B6582515BEEF34 /* StatusBarController.swift */,
+			);
+			path = EdgeMeter;
+			sourceTree = "<group>";
+		};
+		9642FE09ED5F5819D50FF5EC /* App */ = {
+			isa = PBXGroup;
+			children = (
+				5D5FB9EA353BB5D628E9905D /* EdgeMeter */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4D58B285DE043F21D710F3C6 /* EdgeMeter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88AD5378A32459CAC05A9598 /* Build configuration list for PBXNativeTarget "EdgeMeter" */;
+			buildPhases = (
+				E0A2EE19660D05C3FA92613D /* Sources */,
+				133BA38BE888264CD694C1DA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EdgeMeter;
+			packageProductDependencies = (
+				D5F368EB53CB83C1294380BD /* EdgeMeterCore */,
+			);
+			productName = EdgeMeter;
+			productReference = 24566E19673467721C6B4D57 /* EdgeMeter.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C564B546828F530D27D6D08A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					4D58B285DE043F21D710F3C6 = {
+						DevelopmentTeam = 25ZPKD8P86;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 7EEBE809C8B133C056F78076 /* Build configuration list for PBXProject "EdgeMeter" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 01986C63B2E3968AAA63A084;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F381547472A1A316C2DFECD0 /* XCLocalSwiftPackageReference "Packages/EdgeMeterCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 4B404B10BB2A8A04A6AD4812 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4D58B285DE043F21D710F3C6 /* EdgeMeter */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E0A2EE19660D05C3FA92613D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22B5E06E0E091159E53524D9 /* AppDelegate.swift in Sources */,
+				BD24CF34A0D5393527A7D7C6 /* AppSettings.swift in Sources */,
+				8BA44219F2B5FF1344D893B6 /* DebugRenderer.swift in Sources */,
+				8A63F8560575BFFC8CE7B49E /* GlassBackdrop.swift in Sources */,
+				D808FD2ABB961AF3D5419EBB /* GlobalHotKey.swift in Sources */,
+				6399FD04AD866CA33F409652 /* LiveBenchmark.swift in Sources */,
+				0A0BCAB5A278551A0E68E473 /* LiveCapture.swift in Sources */,
+				AD95A3B3639F7B607DBDA11D /* MeasureController.swift in Sources */,
+				516FD6C8791D551CDED0AB15 /* MeasureSession.swift in Sources */,
+				5CA006D6855F9BC937B861D5 /* MeasureView.swift in Sources */,
+				665276567321C36C91866A3D /* Onboarding.swift in Sources */,
+				4588431FE095C19018E33548 /* OverlayWindow.swift in Sources */,
+				E285238C20E1E8BB4A7C6B97 /* ScreenCapture.swift in Sources */,
+				A32BEEEB7B23A86CF755B63D /* SettingsWindow.swift in Sources */,
+				5CECC4BA812E393C1B747A35 /* StatusBarController.swift in Sources */,
+				C40864F3D360733BD97A28CD /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0C5A84AA898FC0DCE81482B3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/EdgeMeter/EdgeMeter.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 25ZPKD8P86;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/EdgeMeter/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.ErikRill.EdgeMeter;
+				PRODUCT_NAME = EdgeMeter;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		4B52CB92029ADF8E8874A0C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		54AE3C499F037AA4319E03B9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		B431C2D25821ECDC74332056 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App/EdgeMeter/EdgeMeter.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 25ZPKD8P86;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/EdgeMeter/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.ErikRill.EdgeMeter;
+				PRODUCT_NAME = EdgeMeter;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7EEBE809C8B133C056F78076 /* Build configuration list for PBXProject "EdgeMeter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				54AE3C499F037AA4319E03B9 /* Debug */,
+				4B52CB92029ADF8E8874A0C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		88AD5378A32459CAC05A9598 /* Build configuration list for PBXNativeTarget "EdgeMeter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0C5A84AA898FC0DCE81482B3 /* Debug */,
+				B431C2D25821ECDC74332056 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		F381547472A1A316C2DFECD0 /* XCLocalSwiftPackageReference "Packages/EdgeMeterCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/EdgeMeterCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D5F368EB53CB83C1294380BD /* EdgeMeterCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EdgeMeterCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = C564B546828F530D27D6D08A /* Project object */;
+}

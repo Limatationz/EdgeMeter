@@ -1,11 +1,11 @@
-# Kaliber
+# EdgeMeter
 
 Open-source screen measurement tool for macOS. Measure distances, sizes and spacing of anything
 on screen, pixel-exact, with smart edge snapping – an open alternative to PixelSnap.
 
 > Status: MVP feature-complete, not yet released – live (or frozen) overlay per display,
 > hover / two-point / object / area measuring, loupe, nudging, undo, copy, settings window,
-> onboarding. Kaliber only measures; it is not a screenshot tool.
+> onboarding. EdgeMeter only measures; it is not a screenshot tool.
 
 - [Feature catalog](docs/FEATURES.md)
 
@@ -14,9 +14,9 @@ Stack: Swift 6, AppKit, ScreenCaptureKit, macOS 14+. License: MIT.
 ## Layout
 
 ```
-Kaliber.xcodeproj          generated from project.yml (XcodeGen) – open this in Xcode
+EdgeMeter.xcodeproj          generated from project.yml (XcodeGen) – open this in Xcode
 project.yml                source of truth for the Xcode project
-App/Kaliber/               menu-bar app (AppKit)
+App/EdgeMeter/               menu-bar app (AppKit)
   GlobalHotKey.swift         global shortcut via Carbon RegisterEventHotKey
   AppSettings.swift          persisted settings (tolerance, live, loupe, shortcut) + HotKeyCenter
   SettingsWindow.swift       SwiftUI settings window incl. shortcut recorder, launch at login
@@ -29,8 +29,8 @@ App/Kaliber/               menu-bar app (AppKit)
   MeasureView.swift          input for all modes, device-pixel drawing, HUD
   GlassBackdrop.swift        Liquid Glass behind HUD and loupe (macOS 26+, plain dark before)
   DebugRenderer.swift        DEBUG only: overlay/settings to PNG, demo session, live probe
-Packages/KaliberCore/      pure-Swift measurement core, no AppKit dependency
-  Sources/KaliberCore/
+Packages/EdgeMeterCore/      pure-Swift measurement core, no AppKit dependency
+  Sources/EdgeMeterCore/
     PixelBuffer.swift        frozen BGRA/RGBA framebuffer copy (+ CGImage bridge)
     RGBA.swift               color + distance metrics (maxChannel, euclidean, perceptual)
     EdgeDetector.swift       ray scan, hover snap, nearest-boundary snapping
@@ -38,7 +38,7 @@ Packages/KaliberCore/      pure-Swift measurement core, no AppKit dependency
     AreaSnapper.swift        snaps a dragged rect's four sides to edges
     ScreenMeasurement.swift  pinned measurement model + clipboard text
     Units.swift              scale modes (Auto/1×/2×/3×) and length formatting
-  Tests/KaliberCoreTests/  51 tests against synthetic images (boxes, glyphs, gradients, AA fringes)
+  Tests/EdgeMeterCoreTests/  51 tests against synthetic images (boxes, glyphs, gradients, AA fringes)
 docs/FEATURES.md           feature catalog and roadmap
 ```
 
@@ -46,11 +46,11 @@ docs/FEATURES.md           feature catalog and roadmap
 
 ```sh
 # Core only – fast, no Xcode project needed
-swift test --package-path Packages/KaliberCore
+swift test --package-path Packages/EdgeMeterCore
 
 # App + tests through Xcode
-xcodebuild -project Kaliber.xcodeproj -scheme Kaliber test
-open Kaliber.xcodeproj
+xcodebuild -project EdgeMeter.xcodeproj -scheme EdgeMeter test
+open EdgeMeter.xcodeproj
 
 # Regenerate the project after editing project.yml
 brew install xcodegen && xcodegen generate
@@ -59,7 +59,7 @@ brew install xcodegen && xcodegen generate
 ## Using it
 
 Press **⌃⌥⌘M** (or the ruler icon › Measure; the shortcut can be changed under ruler icon › Settings…). Measuring starts live on the real screen; L freezes it. Esc leaves.
-On first use macOS asks for Screen Recording permission – grant it, then restart Kaliber.
+On first use macOS asks for Screen Recording permission – grant it, then restart EdgeMeter.
 
 | Key | Action |
 |---|---|
@@ -82,7 +82,7 @@ On first use macOS asks for Screen Recording permission – grant it, then resta
 Overlay drawing can be checked without a live session or permission:
 
 ```sh
-Kaliber.app/Contents/MacOS/Kaliber -renderDemo /tmp/kaliber-demo.png   # Debug builds only
+EdgeMeter.app/Contents/MacOS/EdgeMeter -renderDemo /tmp/edgemeter-demo.png   # Debug builds only
 ```
 
 ## Core concepts (see also FEATURES.md §2, §17)

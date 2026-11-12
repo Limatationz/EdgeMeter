@@ -1,8 +1,8 @@
-# Kaliber – Feature Catalog
+# EdgeMeter – Feature Catalog
 
-> Kaliber is an open-source macOS screen measurement tool in the spirit of
+> EdgeMeter is an open-source macOS screen measurement tool in the spirit of
 > [PixelSnap](https://pixelsnap.com/): measure anything on screen in pixels with smart edge
-> snapping, two-point measurements and object measurements. Kaliber only measures; it is not a
+> snapping, two-point measurements and object measurements. EdgeMeter only measures; it is not a
 > screenshot tool.
 >
 > Status: planning. Priorities: **P0** = MVP, **P1** = v1.0, **P2** = later / nice to have.
@@ -133,9 +133,9 @@ edges in all four directions and shows the distances without any clicking.
 
 ## 8. Screenshots and export – out of scope
 
-Decided 2026-11-11: Kaliber only measures. Screenshots with or without overlays, saving images,
+Decided 2026-11-11: EdgeMeter only measures. Screenshots with or without overlays, saving images,
 SVG export and share sheets (former 8.1–8.5, 8.7, 8.8) are dropped; the system screenshot tool
-covers that. Measurement values leave Kaliber as text (⌘C / ⇧⌘C).
+covers that. Measurement values leave EdgeMeter as text (⌘C / ⇧⌘C).
 
 | # | Feature | Prio | Parity | Notes |
 |---|---|---|---|---|
@@ -296,15 +296,14 @@ Settings stored in `UserDefaults`; export/import as JSON (P2).
 
 ## 19. Open questions
 
-- Name settled 2026-11-12: **Kaliber** (German for caliber/gauge). Checked: no Mac measuring tool, Homebrew
-  cask or relevant GitHub project of that name; kaliber.app/.dev are taken, kaliberapp.com was free.
-  Nearby: calibre (e-book manager), Kaliber Interactive (Dutch agency). Considered and dropped:
-  Caliper/Screen Calipers (existing Mac tools), Vernier, Snapline, Gauge, Edgewise, Spanwise, EdgeMeter.
-  TMview (2026-11-12): many KALIBER marks, mostly beer (Diageo), tobacco, feed, clothing. Relevant to
-  software: EU word mark KALIBER 019026343 (KLBR Live Entertainment AB, classes 9/25/32/33/35/41/43/45,
-  filed 2024) and Benelux KALIBER 1290609/1488670 (Kaliber Interactive BV, 35/41/42). National 9/42
-  marks: SE (Sveriges Radio), IT (KALIBER ITALIA), DE kaliber5 (35/41/42). Class 9 goods lists of the EU
-  mark not yet checked; fine for a free open-source tool, re-check before any commercial/App Store use.
+- Name settled 2026-11-12: **EdgeMeter** (working title until then: Kaliber). TMview "contains EdgeMeter":
+  only EDGEMETER logo marks in India (classes 25, 35), an ended Korean "Wedgemeter" (9) and a filed US
+  "KnowledgeMeter" (42) – nothing in the EU/DE/US for software. No Mac tool, Homebrew cask or relevant
+  GitHub project of that name; edgemeter.com is parked for sale, edgemeter.app/.dev had no DNS.
+  Why not Kaliber: EU word mark KALIBER 019026343 (KLBR Live Entertainment AB, filed 2024) covers class 9
+  "Anwendungssoftware; Mobile Apps", plus Benelux KALIBER (Kaliber Interactive BV, class 42).
+  Also dropped: Caliper/Screen Calipers (existing Mac tools), Vernier, Snapline, Gauge (Homebrew), Edgewise
+  and Spanwise (not checked in TMview).
 - Scope settled 2026-11-11: measuring only, no screenshot/export features (§8).
 
 ### Decided for the prototype (2026-11-09, revisit if needed)
@@ -321,7 +320,7 @@ Settings stored in `UserDefaults`; export/import as JSON (P2).
   L in live mode freezes the newest frame without a new capture.
   Measured live (2026-11-10, M1 Pro, 3024×1964, `-liveBenchmark 5`, Release):
 
-  | Screen | fps | copy avg / p95 | snap avg | Kaliber CPU | RSS |
+  | Screen | fps | copy avg / p95 | snap avg | EdgeMeter CPU | RSS |
   |---|---|---|---|---|---|
   | mostly static (terminal spinner) | 16 | 2.2 / 3.7 ms | 0.04 ms | 4.5 % | 126 MB |
   | 60 Hz animation | 29 (cap 30) | 2.5 / 4.0 ms | 0.05 ms | 8.8 % | 126 MB |

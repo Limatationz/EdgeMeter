@@ -1,7 +1,7 @@
 # XcodeGen spec. Regenerate the project with:  xcodegen generate
-# (brew install xcodegen). Kaliber.xcodeproj is checked in for convenience,
+# (brew install xcodegen). EdgeMeter.xcodeproj is checked in for convenience,
 # but project.yml is the source of truth.
-name: Kaliber
+name: EdgeMeter
 options:
   bundleIdPrefix: de.ErikRill
   deploymentTarget:
@@ -24,25 +24,25 @@ settings:
       ONLY_ACTIVE_ARCH: NO      # universal binary for releases (FEATURES.md 16.5)
 
 packages:
-  KaliberCore:
-    path: Packages/KaliberCore
+  EdgeMeterCore:
+    path: Packages/EdgeMeterCore
 
 targets:
-  Kaliber:
+  EdgeMeter:
     type: application
     platform: macOS
     sources:
-      - path: App/Kaliber
+      - path: App/EdgeMeter
         excludes:
           - "Info.plist"
           - "*.entitlements"
     dependencies:
-      - package: KaliberCore
+      - package: EdgeMeterCore
     info:
-      path: App/Kaliber/Info.plist
+      path: App/EdgeMeter/Info.plist
       properties:
-        CFBundleName: Kaliber
-        CFBundleDisplayName: Kaliber
+        CFBundleName: EdgeMeter
+        CFBundleDisplayName: EdgeMeter
         CFBundleShortVersionString: "0.1.0"
         CFBundleVersion: "1"
         LSMinimumSystemVersion: "14.0"
@@ -52,7 +52,7 @@ targets:
         NSPrincipalClass: NSApplication
         NSMainStoryboardFile: ""
     entitlements:
-      path: App/Kaliber/Kaliber.entitlements
+      path: App/EdgeMeter/EdgeMeter.entitlements
       properties:
         # Hardened runtime without sandbox for now: ScreenCaptureKit works
         # either way, but global hotkeys and per-app logic are simpler unsandboxed.
@@ -60,17 +60,17 @@ targets:
         com.apple.security.app-sandbox: false
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: de.ErikRill.Kaliber
+        PRODUCT_BUNDLE_IDENTIFIER: de.ErikRill.EdgeMeter
         DEVELOPMENT_TEAM: 25ZPKD8P86     # Erik Rill (personal team)
-        PRODUCT_NAME: Kaliber
+        PRODUCT_NAME: EdgeMeter
         ENABLE_HARDENED_RUNTIME: YES
         CODE_SIGN_STYLE: Automatic
         CODE_SIGN_IDENTITY: "Apple Development"   # Developer ID for notarized releases later
         GENERATE_INFOPLIST_FILE: NO
-        INFOPLIST_FILE: App/Kaliber/Info.plist
-        CODE_SIGN_ENTITLEMENTS: App/Kaliber/Kaliber.entitlements
+        INFOPLIST_FILE: App/EdgeMeter/Info.plist
+        CODE_SIGN_ENTITLEMENTS: App/EdgeMeter/EdgeMeter.entitlements
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         COMBINE_HIDPI_IMAGES: YES
     scheme:
       testTargets:
-        - package: KaliberCore/KaliberCoreTests
+        - package: EdgeMeterCore/EdgeMeterCoreTests
