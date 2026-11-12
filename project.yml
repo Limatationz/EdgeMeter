@@ -69,7 +69,7 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: App/EdgeMeter/Info.plist
         CODE_SIGN_ENTITLEMENTS: App/EdgeMeter/EdgeMeter.entitlements
-        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon   # App/EdgeMeter/AppIcon.icon (Icon Composer)
         COMBINE_HIDPI_IMAGES: YES
     scheme:
       testTargets:

@@ -20,6 +20,7 @@
 		A32BEEEB7B23A86CF755B63D /* SettingsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E5A95B5D3EF45FBAD8581B /* SettingsWindow.swift */; };
 		AD95A3B3639F7B607DBDA11D /* MeasureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0688481DB870E96DA8D43B /* MeasureController.swift */; };
 		B2E241BC2C6F61ACED6BC770 /* EdgeMeterCore in Frameworks */ = {isa = PBXBuildFile; productRef = D5F368EB53CB83C1294380BD /* EdgeMeterCore */; };
+		B30E12D94AE0869A809DE53F /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 09EA76A425D8AA55F082A700 /* AppIcon.icon */; };
 		BD24CF34A0D5393527A7D7C6 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2683BA1AAB2FAC31D33781 /* AppSettings.swift */; };
 		C40864F3D360733BD97A28CD /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A154DB45F69F9C3EFC9C669 /* main.swift */; };
 		D808FD2ABB961AF3D5419EBB /* GlobalHotKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDA4638118F1DA18734D28A6 /* GlobalHotKey.swift */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		09EA76A425D8AA55F082A700 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		0D4BE8722B0AEFCA019894DB /* LiveBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBenchmark.swift; sourceTree = "<group>"; };
 		10E5A95B5D3EF45FBAD8581B /* SettingsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindow.swift; sourceTree = "<group>"; };
 		190024FB250E33D0E0C7A555 /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				274DA817357A63B008E77B09 /* AppDelegate.swift */,
+				09EA76A425D8AA55F082A700 /* AppIcon.icon */,
 				1F2683BA1AAB2FAC31D33781 /* AppSettings.swift */,
 				F277D42D537B5E081D6F0705 /* DebugRenderer.swift */,
 				A3D9A839C8B5B54FAA37F6DB /* GlassBackdrop.swift */,
@@ -123,6 +126,7 @@
 			buildConfigurationList = 88AD5378A32459CAC05A9598 /* Build configuration list for PBXNativeTarget "EdgeMeter" */;
 			buildPhases = (
 				E0A2EE19660D05C3FA92613D /* Sources */,
+				BDF8B6E7EBB3FC340D6E1368 /* Resources */,
 				133BA38BE888264CD694C1DA /* Frameworks */,
 			);
 			buildRules = (
@@ -174,6 +178,17 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		BDF8B6E7EBB3FC340D6E1368 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B30E12D94AE0869A809DE53F /* AppIcon.icon in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		E0A2EE19660D05C3FA92613D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -205,7 +220,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = App/EdgeMeter/EdgeMeter.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -354,7 +368,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = App/EdgeMeter/EdgeMeter.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;

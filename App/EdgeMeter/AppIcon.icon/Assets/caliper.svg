@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <g fill="#FFFFFF">
+    <path fill-rule="evenodd" d="M168 296 H856 Q874 296 874 314 V354 Q874 372 856 372 H168 Q150 372 150 354 V314 Q150 296 168 296 Z M258 308 h7 v34 h-7 Z M287 308 h7 v20 h-7 Z M316 308 h7 v20 h-7 Z M345 308 h7 v20 h-7 Z M374 308 h7 v20 h-7 Z M403 308 h7 v34 h-7 Z M432 308 h7 v20 h-7 Z M461 308 h7 v20 h-7 Z M490 308 h7 v20 h-7 Z M519 308 h7 v20 h-7 Z M734 308 h7 v34 h-7 Z M763 308 h7 v20 h-7 Z M792 308 h7 v20 h-7 Z M821 308 h7 v20 h-7 Z M850 308 h7 v20 h-7 Z"/>
+    <rect x="574" y="266" width="144" height="136" rx="26"/>
+    <path d="M150 330 H226 V772 L150 640 Z"/>
+    <path d="M596 390 H672 V640 L596 772 Z"/>
+  </g>
+</svg>

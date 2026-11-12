@@ -21,6 +21,8 @@ App/EdgeMeter/               menu-bar app (AppKit)
   AppSettings.swift          persisted settings (tolerance, live, loupe, shortcut) + HotKeyCenter
   SettingsWindow.swift       SwiftUI settings window incl. shortcut recorder, launch at login
   Onboarding.swift           first-launch introduction, Screen Recording permission flow
+  AppIcon.icon/              app icon (Icon Composer: caliper glass layer + measure line); Xcode
+                             derives the classic icns for macOS 14–25
   ScreenCapture.swift        permission + per-display ScreenCaptureKit snapshots
   LiveCapture.swift          live mode: one SCStream per display, frames copied off-main
   MeasureController.swift    starts/stops sessions, permission and error alerts
