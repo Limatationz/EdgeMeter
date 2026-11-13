@@ -1,0 +1,18 @@
+name: Feature request
+description: An idea that would make measuring easier.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: EdgeMeter only measures – screenshot and annotation features are out of scope.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to measure or do?
+      description: Describe the situation and what's missing today.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: EdgeMeter version

@@ -82,6 +82,10 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         intro.target = self
         menu.addItem(intro)
 
+        let feedback = NSMenuItem(title: "Send Feedback…", action: #selector(sendFeedback), keyEquivalent: "")
+        feedback.target = self
+        menu.addItem(feedback)
+
         let settings = NSMenuItem(title: "Settings…", action: #selector(openSettings), keyEquivalent: ",")
         settings.target = self
         menu.addItem(settings)
@@ -109,6 +113,36 @@ final class StatusBarController: NSObject, NSMenuDelegate {
         measureItem.keyEquivalent = printable ? hotKey.keyLabel.lowercased() : ""
         measureItem.keyEquivalentModifierMask = printable ? hotKey.modifierFlags : []
         measureItem.title = printable ? "Measure" : "Measure (\(hotKey.display))"
+    }
+
+    /// Opens a new GitHub issue (bug form) with version, macOS and Mac already filled in.
+    @objc private func sendFeedback() {
+        var components = URLComponents(string: "https://github.com/Limatationz/EdgeMeter/issues/new")!
+        components.queryItems = [
+            URLQueryItem(name: "template", value: "bug_report.yml"),
+            URLQueryItem(name: "version", value: "\(appVersion) (\(appBuild))"),
+            URLQueryItem(name: "macos", value: "\(ProcessInfo.processInfo.operatingSystemVersionString), \(Self.macModel)"),
+        ]
+        if let url = components.url { NSWorkspace.shared.open(url) }
+    }
+
+    private var appBuild: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "?"
+    }
+
+    /// e.g. "Mac14,9 (arm64)".
+    private static var macModel: String {
+        var size = 0
+        sysctlbyname("hw.model", nil, &size, nil, 0)
+        var model = [UInt8](repeating: 0, count: max(size, 1))
+        sysctlbyname("hw.model", &model, &size, nil, 0)
+        #if arch(arm64)
+        let arch = "arm64"
+        #else
+        let arch = "x86_64"
+        #endif
+        let name = String(decoding: model.prefix { $0 != 0 }, as: UTF8.self)
+        return "\(name) (\(arch))"
     }
 
     @objc private func openIntroduction() {

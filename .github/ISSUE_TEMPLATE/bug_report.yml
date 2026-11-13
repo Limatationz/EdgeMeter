@@ -1,0 +1,45 @@
+name: Bug report
+description: Something measures wrong, looks wrong or doesn't work.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you measure, what did EdgeMeter show, and what did you expect? A screenshot helps a lot.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open …
+        2. Press ⌃⌥⌘M, mode 1 (hover)
+        3. Hover over …
+  - type: input
+    id: version
+    attributes:
+      label: EdgeMeter version
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version and Mac
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Live or frozen?
+      options:
+        - Live (default)
+        - Frozen (L)
+        - Both
+        - Not sure
+  - type: input
+    id: displays
+    attributes:
+      label: Displays
+      description: e.g. "built-in Retina only" or "MacBook + external 4K at 150 %"
