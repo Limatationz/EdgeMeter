@@ -84,6 +84,7 @@ Debug builds accept flags (`build/Build/Products/Debug/EdgeMeter.app/Contents/Ma
 | `-renderOnboarding <dir>` | Opens the onboarding briefly and captures each page |
 | `-renderMenuIcon <png>` | Menu-bar icon at 10× on light and dark |
 | `-demoSession <s>` | Real overlay session (`-demoLive YES`, `-demoHover x,y`, `-demoScreenshot <png>`) |
+| `-readmeScreenshots <dir>` | Stages a demo window and regenerates the README screenshots |
 | `-liveProbe <dir>` | Saves the captured pixels and hover spans of a live session |
 | `-liveBenchmark <s>` | (all configurations) fps, copy/snap time, CPU and memory of live mode |
 

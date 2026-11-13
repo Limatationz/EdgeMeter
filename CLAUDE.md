@@ -6,8 +6,8 @@ recorded decisions: docs/FEATURES.md (§19).
 
 ## Project rules
 
-- Personal project of Erik Rill, not codivo: bundle id `de.ErikRill.EdgeMeter`, team 25ZPKD8P86,
-  private repo github.com/Limatationz/EdgeMeter.
+- Personal open-source project of Erik Rill (personal Apple team only): bundle id `de.ErikRill.EdgeMeter`,
+  team 25ZPKD8P86, repo github.com/Limatationz/EdgeMeter.
 - `project.yml` is the source of truth; run `xcodegen generate` after adding files or changing settings.
 - Detection code stays AppKit-free in `Packages/EdgeMeterCore` (Swift Testing, `swift test --package-path Packages/EdgeMeterCore`).
 - Hover snap uses pixel coordinates (inclusive spans); two-point and area snapping use boundary
@@ -20,7 +20,7 @@ recorded decisions: docs/FEATURES.md (§19).
 - DEBUG flags on `build/Build/Products/Debug/EdgeMeter.app/Contents/MacOS/EdgeMeter`:
   `-renderDemo <png>` (overlay over a synthetic UI at 2×, with `-demoHover x,y`, `-demoLiveHUD YES`),
   `-renderSettings <png>`, `-renderOnboarding <dir>` (real window, brief), `-renderMenuIcon <png>`, `-demoSession <s>` (+ `-demoLive YES`, `-demoHover x,y`,
-  `-demoScreenshot <png>` for a real-window screenshot incl. glass), `-liveProbe <dir>`.
+  `-demoScreenshot <png>` for a real-window screenshot incl. glass), `-liveProbe <dir>`, `-readmeScreenshots <dir>` (regenerates docs/screenshots, covers the screen ~10 s).
   `-renderDemo` draws without glass (classic look); use `-demoScreenshot` to check glass. All configs: `-liveBenchmark <s>`.
 - Don't kill a running EdgeMeter (the user runs it from the Xcode debugger) and don't move the cursor
   without asking; the debug flags run alongside it.
