@@ -65,3 +65,4 @@ else
 fi
 
 echo "==> Done: ${DMG}"
+echo "    sha256 $(shasum -a 256 "${DMG}" | cut -d' ' -f1)  (for Casks/edgemeter.rb in Limatationz/homebrew-tap)"

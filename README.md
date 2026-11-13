@@ -39,6 +39,12 @@
 2. Drag EdgeMeter into Applications and open it. It's signed and notarized by Apple.
 3. Allow **Screen Recording** when asked – the introduction walks you through it.
 
+Or with [Homebrew](https://brew.sh):
+
+```sh
+brew install --cask limatationz/tap/edgemeter
+```
+
 Requires macOS 14 Sonoma or later, Apple silicon or Intel.
 
 ### Privacy

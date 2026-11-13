@@ -97,4 +97,7 @@ scripts/release.sh --skip-notarize  # same without notarization
 
 Needs the maintainer's Developer ID certificate and a notarytool profile named `edgemeter`
 (`xcrun notarytool store-credentials edgemeter --apple-id <apple-id> --team-id <team>`, run in Terminal.app).
-Bump `CFBundleShortVersionString` / `CFBundleVersion` in `project.yml` first.
+Bump `CFBundleShortVersionString` / `CFBundleVersion` in `project.yml` first. After publishing the
+GitHub release (tag `v<version>`, DMG attached), update `version` and `sha256`
+(`shasum -a 256 build/release/EdgeMeter-<version>.dmg`) in
+[Limatationz/homebrew-tap](https://github.com/Limatationz/homebrew-tap) `Casks/edgemeter.rb`.
