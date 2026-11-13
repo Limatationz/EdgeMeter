@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Core tests + app build
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode version
+        run: xcodebuild -version
+
+      # Optimized, so the coarse timing checks in PerformanceTests aren't flaky on CI machines.
+      - name: Core tests
+        run: swift test -c release --package-path Packages/EdgeMeterCore
+
+      # Compile check only; releases are built and signed locally with scripts/release.sh.
+      - name: Build app (unsigned)
+        run: |
+          xcodebuild -project EdgeMeter.xcodeproj -scheme EdgeMeter -configuration Debug \
+            -destination 'generic/platform=macOS' CODE_SIGNING_ALLOWED=NO build -quiet

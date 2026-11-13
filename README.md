@@ -5,6 +5,10 @@
 <h1 align="center">EdgeMeter</h1>
 
 <p align="center">
+  <a href="https://github.com/Limatationz/EdgeMeter/actions/workflows/ci.yml"><img src="https://github.com/Limatationz/EdgeMeter/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+</p>
+
+<p align="center">
   Measure anything on your Mac's screen – pixel-exact, snapped to the edges you see.<br>
   Free and open source. An alternative to PixelSnap.
 </p>
