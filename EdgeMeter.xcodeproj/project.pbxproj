@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0A0BCAB5A278551A0E68E473 /* LiveCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C73BE9EE3E54C9697EB75D9 /* LiveCapture.swift */; };
 		22B5E06E0E091159E53524D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274DA817357A63B008E77B09 /* AppDelegate.swift */; };
+		29E9236ADFA821626A48FDDC /* ReadmeScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CEDA7F103C162BBE796594 /* ReadmeScreenshots.swift */; };
 		4588431FE095C19018E33548 /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190024FB250E33D0E0C7A555 /* OverlayWindow.swift */; };
 		516FD6C8791D551CDED0AB15 /* MeasureSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3996FB3E411C697547986CD0 /* MeasureSession.swift */; };
 		5CA006D6855F9BC937B861D5 /* MeasureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C3EF8C1726B6D997C4883BA /* MeasureView.swift */; };
@@ -39,6 +40,7 @@
 		3996FB3E411C697547986CD0 /* MeasureSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureSession.swift; sourceTree = "<group>"; };
 		4A154DB45F69F9C3EFC9C669 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4C73BE9EE3E54C9697EB75D9 /* LiveCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCapture.swift; sourceTree = "<group>"; };
+		51CEDA7F103C162BBE796594 /* ReadmeScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadmeScreenshots.swift; sourceTree = "<group>"; };
 		5978F4D143B6582515BEEF34 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		844F5E8FF8F1F18C26EC3C66 /* ScreenCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCapture.swift; sourceTree = "<group>"; };
 		96E8249CA308E79C26F8612C /* EdgeMeterCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EdgeMeterCore; path = Packages/EdgeMeterCore; sourceTree = SOURCE_ROOT; };
@@ -103,6 +105,7 @@
 				9C3EF8C1726B6D997C4883BA /* MeasureView.swift */,
 				2B4BDF21217EE355E9D1E41B /* Onboarding.swift */,
 				190024FB250E33D0E0C7A555 /* OverlayWindow.swift */,
+				51CEDA7F103C162BBE796594 /* ReadmeScreenshots.swift */,
 				844F5E8FF8F1F18C26EC3C66 /* ScreenCapture.swift */,
 				10E5A95B5D3EF45FBAD8581B /* SettingsWindow.swift */,
 				5978F4D143B6582515BEEF34 /* StatusBarController.swift */,
@@ -206,6 +209,7 @@
 				5CA006D6855F9BC937B861D5 /* MeasureView.swift in Sources */,
 				665276567321C36C91866A3D /* Onboarding.swift in Sources */,
 				4588431FE095C19018E33548 /* OverlayWindow.swift in Sources */,
+				29E9236ADFA821626A48FDDC /* ReadmeScreenshots.swift in Sources */,
 				E285238C20E1E8BB4A7C6B97 /* ScreenCapture.swift in Sources */,
 				A32BEEEB7B23A86CF755B63D /* SettingsWindow.swift in Sources */,
 				5CECC4BA812E393C1B747A35 /* StatusBarController.swift in Sources */,

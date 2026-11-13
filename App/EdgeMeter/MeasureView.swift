@@ -117,10 +117,18 @@ final class MeasureView: NSView {
     }
 
     /// Debug renderer hook: hover a device pixel directly.
-    func simulateHover(at p: PixelPoint) {
+    func simulateHover(at p: PixelPoint?) {
         hoverPixel = p
         refreshHover()
     }
+
+    #if DEBUG
+    /// Debug hook: device pixel under a point in screen coordinates.
+    func debugPixel(atScreen point: NSPoint) -> PixelPoint? {
+        guard let window else { return nil }
+        return pixel(devicePoint(convert(window.convertPoint(fromScreen: point), from: nil)))
+    }
+    #endif
 
     #if DEBUG
     var debugHoverSnap: SnapResult? { hoverSnap }

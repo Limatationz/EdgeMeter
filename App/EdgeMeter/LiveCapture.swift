@@ -43,9 +43,16 @@ final class LiveCapture: NSObject, SCStreamDelegate {
 
             // Exclude EdgeMeter itself so our own lines and labels never feed back into detection.
             // By app if ScreenCaptureKit lists it (covers windows created later), else by window.
-            let filter = ownApps.isEmpty
+            var filter = ownApps.isEmpty
                 ? SCContentFilter(display: display, excludingWindows: ownWindows)
                 : SCContentFilter(display: display, excludingApplications: ownApps, exceptingWindows: [])
+            #if DEBUG
+            if Self.debugCaptureOwnWindows {
+                // README screenshots measure a demo window of our own: exclude only the overlays.
+                let overlays = Set(NSApp.windows.compactMap { $0 as? OverlayWindow }.map { CGWindowID($0.windowNumber) })
+                filter = SCContentFilter(display: display, excludingWindows: ownWindows.filter { overlays.contains($0.windowID) })
+            }
+            #endif
             let config = SCStreamConfiguration()
             let pixelScale = CGFloat(filter.pointPixelScale)
             config.width = Int((filter.contentRect.width * pixelScale).rounded())
@@ -86,6 +93,11 @@ final class LiveCapture: NSObject, SCStreamDelegate {
             try await Task.sleep(for: .milliseconds(50))
         }
     }
+
+    #if DEBUG
+    /// Capture EdgeMeter's own non-overlay windows too (README screenshot scene).
+    static var debugCaptureOwnWindows = false
+    #endif
 
     func stop() {
         for stream in streams { stream.stopCapture { _ in } }

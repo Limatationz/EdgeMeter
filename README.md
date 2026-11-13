@@ -1,106 +1,99 @@
-# EdgeMeter
+<p align="center">
+  <img src="docs/screenshots/icon.png" width="128" alt="EdgeMeter icon">
+</p>
 
-Open-source screen measurement tool for macOS. Measure distances, sizes and spacing of anything
-on screen, pixel-exact, with smart edge snapping – an open alternative to PixelSnap.
+<h1 align="center">EdgeMeter</h1>
 
-> Status: MVP feature-complete, not yet released – live (or frozen) overlay per display,
-> hover / two-point / object / area measuring, loupe, nudging, undo, copy, settings window,
-> onboarding. EdgeMeter only measures; it is not a screenshot tool.
+<p align="center">
+  Measure anything on your Mac's screen – pixel-exact, snapped to the edges you see.<br>
+  Free and open source. An alternative to PixelSnap.
+</p>
 
-- [Feature catalog](docs/FEATURES.md)
+<p align="center">
+  <a href="https://github.com/Limatationz/EdgeMeter/releases/latest"><b>Download</b></a> ·
+  <a href="#keys">Keys</a> ·
+  <a href="https://github.com/Limatationz/EdgeMeter/issues">Feedback</a> ·
+  <a href="CONTRIBUTING.md">Contributing</a>
+</p>
 
-Stack: Swift 6, AppKit, ScreenCaptureKit, macOS 14+. License: MIT.
+![EdgeMeter measuring the distances around a cursor, with the loupe](docs/screenshots/hero.png)
 
-## Layout
+## Features
 
-```
-EdgeMeter.xcodeproj          generated from project.yml (XcodeGen) – open this in Xcode
-project.yml                source of truth for the Xcode project
-App/EdgeMeter/               menu-bar app (AppKit)
-  GlobalHotKey.swift         global shortcut via Carbon RegisterEventHotKey
-  AppSettings.swift          persisted settings (tolerance, live, loupe, shortcut) + HotKeyCenter
-  SettingsWindow.swift       SwiftUI settings window incl. shortcut recorder, launch at login
-  Onboarding.swift           first-launch introduction, Screen Recording permission flow
-  AppIcon.icon/              app icon (Icon Composer: caliper glass layer + measure line); Xcode
-                             derives the classic icns for macOS 14–25
-  ScreenCapture.swift        permission + per-display ScreenCaptureKit snapshots
-  LiveCapture.swift          live mode: one SCStream per display, frames copied off-main
-  MeasureController.swift    starts/stops sessions, permission and error alerts
-  MeasureSession.swift       shared mode/scale/tolerance, keyboard commands
-  OverlayWindow.swift        non-activating panel per display, frozen (snapshot) or live (transparent)
-  MeasureView.swift          input for all modes, device-pixel drawing, HUD
-  GlassBackdrop.swift        Liquid Glass behind HUD and loupe (macOS 26+, plain dark before)
-  DebugRenderer.swift        DEBUG only: overlay/settings to PNG, demo session, live probe
-Packages/EdgeMeterCore/      pure-Swift measurement core, no AppKit dependency
-  Sources/EdgeMeterCore/
-    PixelBuffer.swift        frozen BGRA/RGBA framebuffer copy (+ CGImage bridge)
-    RGBA.swift               color + distance metrics (maxChannel, euclidean, perceptual)
-    EdgeDetector.swift       ray scan, hover snap, nearest-boundary snapping
-    ObjectDetector.swift     scanline flood fill → bounding box (object mode)
-    AreaSnapper.swift        snaps a dragged rect's four sides to edges
-    ScreenMeasurement.swift  pinned measurement model + clipboard text
-    Units.swift              scale modes (Auto/1×/2×/3×) and length formatting
-  Tests/EdgeMeterCoreTests/  51 tests against synthetic images (boxes, glyphs, gradients, AA fringes)
-docs/FEATURES.md           feature catalog and roadmap
-```
+- **Hover** – distances from the cursor to the nearest edges in all four directions, live as you move.
+- **Two points** – drag a line between two edges; both ends snap to the nearest edge.
+- **Objects** – click a button, icon or card to get its exact size.
+- **Areas** – drag roughly around something, the box snaps to its edges.
+- **Loupe** – the exact pixels around the cursor, magnified, with the measurement drawn in.
+- **Pixel nudging** – arrow keys move by one device pixel (⇧ for ten).
+- **Points and pixels** – on Retina displays every value shows both, e.g. `100 pt · 200 px`.
+- **Live** – measures the real screen while it moves; freeze it with **L** for menus and animations.
+- **Copy** – ⌘C puts the value on the clipboard; pin as many measurements as you like.
+- Native and light: a menu-bar app, under 10 % of one core while measuring live, nothing while idle.
 
-## Build and test
+![Object, area and two-point measurements pinned on a UI](docs/screenshots/pinned.png)
 
-```sh
-# Core only – fast, no Xcode project needed
-swift test --package-path Packages/EdgeMeterCore
+## Install
 
-# App + tests through Xcode
-xcodebuild -project EdgeMeter.xcodeproj -scheme EdgeMeter test
-open EdgeMeter.xcodeproj
+1. Download `EdgeMeter-<version>.dmg` from the [latest release](https://github.com/Limatationz/EdgeMeter/releases/latest).
+2. Drag EdgeMeter into Applications and open it. It's signed and notarized by Apple.
+3. Allow **Screen Recording** when asked – the introduction walks you through it.
 
-# Regenerate the project after editing project.yml
-brew install xcodegen && xcodegen generate
+Requires macOS 14 Sonoma or later, Apple silicon or Intel.
 
-# Release: universal build, Developer ID signature, DMG, notarization, stapling
-scripts/release.sh                  # → build/release/EdgeMeter-<version>.dmg
-scripts/release.sh --skip-notarize  # same without notarization
-```
+### Privacy
 
-Releasing needs the "Developer ID Application: Erik Rill (25ZPKD8P86)" certificate and a notarytool
-profile: `xcrun notarytool store-credentials edgemeter --apple-id <apple-id> --team-id 25ZPKD8P86`
-(app-specific password from appleid.apple.com; run it in Terminal.app).
+EdgeMeter finds edges by reading the pixels on screen, which macOS only allows with the Screen
+Recording permission. Pixels are only read in memory while you measure. Nothing is saved, recorded
+or sent anywhere, and EdgeMeter makes no network connections. While measuring live, macOS shows its
+purple recording indicator in the menu bar; it disappears when you press Esc.
 
-## Using it
+## Usage
 
-Press **⌃⌥⌘M** (or the ruler icon › Measure; the shortcut can be changed under ruler icon › Settings…). Measuring starts live on the real screen; L freezes it. Esc leaves.
-On first use macOS asks for Screen Recording permission – grant it, then restart EdgeMeter.
+Press **⌃⌥⌘M** (or click the caliper in the menu bar › Measure), measure, press **Esc** to leave.
+The shortcut can be changed in Settings.
+
+<a id="keys"></a>
 
 | Key | Action |
 |---|---|
-| 1 / 2 / 3 / 4 | Hover / Two-point / Object / Area mode |
-| L | Toggle live (default) / frozen, remembered. Live: screen stays real, ⌘-Tab works, HUD shows fps |
-| Click | Pin hover measurement, or measure the clicked object (mode 3) |
-| Drag | Two-point line (axis-locked) or area (modes 2, 4) |
-| ⌥ (hold) | Outside edges instead of inside (hover) |
-| ⌘ (hold) | Disable snapping while dragging |
-| ← → ↑ ↓ (⇧: 10) | Move the cursor by one device pixel; also moves the end of a drag |
-| Z | Toggle loupe (magnified pixels around the cursor), remembered |
-| - / + (also [ ] and =) or ⌥-scroll | Edge tolerance −/+ in 1 % steps |
-| Scroll | Live: scrolls the app underneath. Frozen: ignored |
-| S | Cycle scale: Auto, 1×, 2×, 3× |
-| ⌘C / ⇧⌘C | Copy current / all measurements |
-| ⌘Z / ⇧⌘Z, ⌫ | Undo / redo, delete last |
-| X | Clear all |
-| H | Toggle HUD |
+| **1 / 2 / 3 / 4** | Hover / two points / object / area |
+| **Click** | Pin the hover measurement, or measure the clicked object (3) |
+| **Drag** | Two-point line or area (2, 4) |
+| **⌥** (hold) | Outside edges instead of inside (hover) |
+| **⌘** (hold) | No snapping while dragging |
+| **← → ↑ ↓** | Move by one pixel, **⇧** for ten – also moves the end of a drag |
+| **Z** | Loupe on/off |
+| **- / +** or **⌥-scroll** | Edge tolerance, when an edge is missed or found too early |
+| **L** | Live / frozen |
+| **S** | Scale: Auto, 1×, 2×, 3× |
+| **⌘C / ⇧⌘C** | Copy current / all measurements |
+| **⌘Z / ⇧⌘Z, ⌫** | Undo / redo, delete last |
+| **X** | Clear all |
+| **H** | Hide the help bar |
+| **Esc** | Stop measuring |
 
-Overlay drawing can be checked without a live session or permission:
+Scrolling without ⌥ goes to the app underneath, so you can scroll while measuring.
+
+![Settings](docs/screenshots/settings.png)
+
+## Feedback
+
+Found a wrong measurement or have an idea? Choose **Send Feedback…** in EdgeMeter's menu – it opens a
+[GitHub issue](https://github.com/Limatationz/EdgeMeter/issues/new/choose) with your versions filled in.
+EdgeMeter only measures; screenshot and annotation features are out of scope.
+
+## Building from source
 
 ```sh
-EdgeMeter.app/Contents/MacOS/EdgeMeter -renderDemo /tmp/edgemeter-demo.png   # Debug builds only
+brew install xcodegen
+git clone https://github.com/Limatationz/EdgeMeter.git && cd EdgeMeter
+xcodegen generate && open EdgeMeter.xcodeproj
 ```
 
-## Core concepts (see also FEATURES.md §2, §17)
+Needs Xcode 26. See [CONTRIBUTING.md](CONTRIBUTING.md) for the project layout, tests and debug tools,
+and [docs/FEATURES.md](docs/FEATURES.md) for the feature catalog and roadmap.
 
-- Detection compares every pixel against the **start pixel**, not its neighbour, so gradients
-  and soft shadows yield a finite run instead of being crossed.
-- `tolerance` is a color distance in `0...1` (0.1 ≈ 25 of 255 per channel with `maxChannel`).
-- Hover snap (`EdgeDetector.snap`) works in **pixel** coordinates and returns inclusive runs;
-  `insideSize`/`outsideSize` map to PixelSnap's inside/outside toggle.
-- Two-point and area snapping work in **boundary** coordinates: boundary `b` lies between
-  pixel `b-1` and `b`, so a box on columns 100…199 has boundaries 100 and 200 and width 100.
+## License
+
+[MIT](LICENSE) © 2026 Erik Rill
