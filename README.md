@@ -56,7 +56,15 @@ open EdgeMeter.xcodeproj
 
 # Regenerate the project after editing project.yml
 brew install xcodegen && xcodegen generate
+
+# Release: universal build, Developer ID signature, DMG, notarization, stapling
+scripts/release.sh                  # → build/release/EdgeMeter-<version>.dmg
+scripts/release.sh --skip-notarize  # same without notarization
 ```
+
+Releasing needs the "Developer ID Application: Erik Rill (25ZPKD8P86)" certificate and a notarytool
+profile: `xcrun notarytool store-credentials edgemeter --apple-id <apple-id> --team-id 25ZPKD8P86`
+(app-specific password from appleid.apple.com; run it in Terminal.app).
 
 ## Using it
 
